@@ -54,7 +54,7 @@ def test_negative_score_detection(login):
 def test_face_property(login):
     """ 测试人脸属性输出的属性字段 """
     MenubarPage(login).click_nav_item("工具", "人脸属性检测")
-    ToolPage(login).check_face_property(r'{}/tool/img_face_property/normal.jpg'.format(SharePath.DATA_FOLDER))
+    ToolPage(login).detect_facial_attribute(r'{}/tool/img_face_property/normal.jpg'.format(SharePath.DATA_FOLDER))
 
     # 断言
     result = {
@@ -71,17 +71,6 @@ def test_face_property(login):
                 "胡子" in result["mustache"]) and ("眼镜" in result["glasse"]) and ("口罩" in result["mask"]) and (
                 "安全帽" in result["helmet"]) and ("帽子" in result["hat"])
 
-    # face_sex = ToolPage(login).get_facial_attribute_by_name("性别")
-    # face_age = ToolPage(login).get_facial_attribute_by_name("年龄")
-    # face_phiz = ToolPage(login).get_facial_attribute_by_name("表情")
-    # face_mustache = ToolPage(login).get_facial_attribute_by_name("胡子")
-    # face_glasse = ToolPage(login).get_facial_attribute_by_name("眼镜")
-    # face_mask = ToolPage(login).get_facial_attribute_by_name("口罩")
-    # face_helmet = ToolPage(login).get_facial_attribute_by_name("安全帽")
-    # face_hat = ToolPage(login).get_facial_attribute_by_name("帽子")
-    # assert ("性别" in face_sex) and ("年龄" in face_age) and ("表情" in face_phiz) and ("胡子" in face_mustache) and (
-    #         "眼镜" in face_glasse) and ("口罩" in face_mask) and ("安全帽" in face_helmet) and ("帽子" in face_hat)
-
 
 @pytest.mark.negative
 @pytest.mark.usefixtures("tool_close_face_score_detection")
@@ -89,7 +78,7 @@ def test_face_property(login):
 def test_negative_face_property(login, data):
     """ 测试上传不同属性的人脸照片检测出对应的人脸属性 """
     MenubarPage(login).click_nav_item("工具", "人脸属性检测")
-    ToolPage(login).check_face_property(f'{SharePath.DATA_FOLDER}/tool/img_face_property/{data["img_path"]}')
+    ToolPage(login).detect_facial_attribute(f'{SharePath.DATA_FOLDER}/tool/img_face_property/{data["img_path"]}')
 
     # 断言
     result = {
@@ -105,19 +94,6 @@ def test_negative_face_property(login, data):
     assert (data["sex"] in result["sex"]) and (data["age"] in result["age"]) and (data["phiz"] in result["phiz"]) and (
             data["mustache"] in result["mustache"]) and (data["glasse"] in result["glasse"]) and (
             data["mask"] in result["mask"]) and (data["helmet"] in result["helmet"]) and (data["hat"] in result["hat"])
-
-    # face_sex = ToolPage(login).get_facial_attribute_by_name("性别")
-    # face_age = ToolPage(login).get_facial_attribute_by_name("年龄")
-    # face_phiz = ToolPage(login).get_facial_attribute_by_name("表情")
-    # face_mustache = ToolPage(login).get_facial_attribute_by_name("胡子")
-    # face_glasse = ToolPage(login).get_facial_attribute_by_name("眼镜")
-    # face_mask = ToolPage(login).get_facial_attribute_by_name("口罩")
-    # face_helmet = ToolPage(login).get_facial_attribute_by_name("安全帽")
-    # face_hat = ToolPage(login).get_facial_attribute_by_name("帽子")
-    #
-    # assert (data["sex"] in face_sex) and (data["age"] in face_age) and (data["phiz"] in face_phiz) and (
-    #         data["mustache"] in face_mustache) and (data["glasse"] in face_glasse) and (
-    #                data["mask"] in face_mask) and (data["helmet"] in face_helmet) and (data["hat"] in face_hat)
 
 
 if __name__ == '__main__':
