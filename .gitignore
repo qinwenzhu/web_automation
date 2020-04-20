@@ -1,1 +1,6 @@
 .idea/
+__pycache__/
+guard/pages/__pycache__/
+guard/pages/classes/__pycache__/
+guard/tools/__pycache__/
+utils/__pycache__/
