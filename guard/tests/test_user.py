@@ -55,10 +55,13 @@ class TestUser:
 
         # 断言搜索到的内容<前端缩略显示的>在user字符串内
         result = GroupTree(user[0]).judge_search_success(user[1])
-        # 正则表达式匹配 - 'UDN-871888...' in 'UDN-871888b9-8004-4b95-954f-562f3e50d421'   字符串在字符内部
-        # result = re.match('^[.]', result)
-        # TODO
-        assert True
+        # print(result)
+        assert re.match("^UDN-[0-9a-zA-Z]{6}.{3}", result)
+        """
+        # 此时使用正则表达式进行匹配结果
+        # ^UDN-[0-9a-zA-Z]{6}.{3}
+        # ^UDN-：以UDN-开头； [0-9a-zA-Z]{6}：0-9/a-z/A-Z匹配数字6次； .{3}：匹配除换行符以外的字符，此处用于匹配点号，匹配3次
+        """
 
     @pytest.mark.positive
     @pytest.mark.usefixtures("close_alert")
