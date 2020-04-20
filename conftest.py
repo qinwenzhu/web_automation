@@ -77,13 +77,13 @@ def login(start_driver_and_quit):
 def timezone(login):
     # 进入时间条件模块
     MenubarPage(login).click_nav_item("配置", "时间条件")
-    class_timezone_name = f"TIME-{get_current_time()}"
-    class_holiday_name = f"H-{get_current_time()}"
-    class_workday_name = f"W-{get_current_time()}"
-    yield login, class_timezone_name, class_holiday_name, class_workday_name
-    TimezonePage(login).delete_or_rename_timezone_name(class_timezone_name)
-    TimezonePage(login).delete_or_rename_holidays_or_workday(class_holiday_name)
-    TimezonePage(login).delete_or_rename_holidays_or_workday(class_workday_name)
+    before_name = {"timezone": f"TIME-{get_current_time()}",
+                   "holiday_name": f"H-{get_current_time()}",
+                   "workday_name": f"W-{get_current_time()}"}
+    yield login, before_name
+    TimezonePage(login).delete_or_rename_timezone_name(before_name["timezone"])
+    TimezonePage(login).delete_or_rename_holidays_or_workday(before_name["holiday_name"])
+    TimezonePage(login).delete_or_rename_holidays_or_workday(before_name["workday_name"])
 
 
 @pytest.fixture

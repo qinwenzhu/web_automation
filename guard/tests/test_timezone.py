@@ -14,20 +14,20 @@ from guard.pages.classes.web_global_info import GlobalDialogInfo
 @pytest.mark.positive
 def test_add_timezone(connect_mysql_and_close, timezone):
     # 测试添加时间条件
-    TimezonePage(timezone[0]).add_timezone(timezone[1])
+    TimezonePage(timezone[0]).add_timezone(timezone[1]["timezone"])
 
     # 断言
     sql = "SELECT * FROM senseguard.info_time_zone WHERE time_zone_name=%s;"
     time.sleep(2)
-    result = connect_mysql_and_close.select_database(sql, args=(timezone[1], ))
+    result = connect_mysql_and_close.select_database(sql, args=(timezone[1]["timezone"], ))
     print(f"数据库查询结果为：{result}")
-    assert timezone[1] == result["time_zone_name"]
+    assert timezone[1]["timezone"] == result["time_zone_name"]
 
 
 @pytest.mark.positive
 def test_add_timezone_section(timezone):
     # 通过选择 指定的时间条件名称 创建时间段
-    TimezonePage(timezone[0]).add_timezone_section_by_timezone_name(timezone[1])
+    TimezonePage(timezone[0]).add_timezone_section_by_timezone_name(timezone[1]["timezone"])
 
     # 断言
     result = TimezonePage(timezone[0]).assert_timezone_section()
@@ -37,27 +37,27 @@ def test_add_timezone_section(timezone):
 @pytest.mark.positive
 def test_create_holidays(connect_mysql_and_close, timezone):
     # 测试添加假期
-    TimezonePage(timezone[0]).create_holidays("添加假期", timezone[2], num=1)
+    TimezonePage(timezone[0]).create_holidays("添加假期", timezone[1]["holiday_name"], num=1)
 
     # 断言
     sql = "SELECT * FROM senseguard.info_holiday WHERE holiday_name=%s;"
     time.sleep(2)
-    result = connect_mysql_and_close.select_database(sql, args=(timezone[2], ))
+    result = connect_mysql_and_close.select_database(sql, args=(timezone[1]["holiday_name"], ))
     print(f"数据库查询结果为：{result}")
-    assert timezone[2] == result["holiday_name"]
+    assert timezone[1]["holiday_name"] == result["holiday_name"]
 
 
 @pytest.mark.positive
 def test_create_workday(connect_mysql_and_close, timezone):
     # 测试添加特殊工作日
-    TimezonePage(timezone[0]).create_workday("添加特殊工作日", timezone[3], num=1)
+    TimezonePage(timezone[0]).create_workday("添加特殊工作日", timezone[1]["workday_name"], num=1)
 
     # 断言
     sql = "SELECT * FROM senseguard.info_holiday WHERE holiday_name=%s;"
     time.sleep(2)
-    result = connect_mysql_and_close.select_database(sql, args=(timezone[3], ))
+    result = connect_mysql_and_close.select_database(sql, args=(timezone[1]["workday_name"], ))
     print(f"数据库查询结果为：{result}")
-    assert timezone[3] == result["holiday_name"]
+    assert timezone[1]["workday_name"] == result["holiday_name"]
 
 
 @pytest.mark.negative
