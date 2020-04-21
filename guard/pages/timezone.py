@@ -178,6 +178,11 @@ class TimezonePage(BasePage):
             TIME_END = (By.XPATH, f'//div[contains(@class, "el-date-range-picker") and contains(@style, "position")]//div[contains(@class,"is-left")]//td//span[contains(text(),{today_text})]')
         BasePage(self.driver).mouse_move_ele_and_click(TIME_CONTROL, TIME_END)
 
+    def assert_result_by_name(self, name):
+        # 判断添加操作是否成功，包括：时间条件、假期、特殊工作日
+        RESULT = (By.XPATH, f'//span[contains(text(), "{name}")]')
+        return BasePage(self.driver).get_text(RESULT)
+
     def assert_timezone_section(self):
         # 判断添加时间段是否成功
         CHECK_CON_RESULT = (By.XPATH, '//div[@class="el-tab-pane" and @style=""]//div[contains(@class, "el-row")]//span[contains(text(), ":")]')
