@@ -128,13 +128,19 @@ class LoginPage(BasePage):
 
     def get_captcha_from_redis(self):
         """ 通过Redis获取验证码 """
-        img_url = self.driver.find_element_by_xpath(
-            "//*[@class='code-pic']").get_attribute("innerHTML")
-        pattern = ".*timestamp=(\d+)"
-        timestamp = re.findall(pattern, img_url)
+        img_url = self.driver.find_element_by_xpath("//*[@class='code-pic']/img").get_attribute("src")
+        # print(img_url)
+        # 获取到 img_url = 'http://10.151.3.96/senseguard-oauth2/api/v1/kaptcha?timestamp=4173971161777936'
+
+        timestamp = re.findall(".*timestamp=(\d+)", img_url)
+        # print(timestamp)  # 获取到 timestamp = ['4173971161777936']
+
         # 动态传入环境 ip
-        redis = GetRedisData(ip=env()["host"])                                        # redis = GetRedisData(ip="10.151.3.96")
-        captcha_code = redis.get_result_from_redis("Senseguard:Oauth2:Login:" + timestamp[0])
+        redis = GetRedisData(ip=env()["host"])          # redis = GetRedisData(ip="10.151.3.96")
+
+        # 此处传入的key值可以在连接Redis成功之后通过 .keys获取当前连接池中所有的key进行筛选到执行的Redis的key值
+        captcha_code = redis.get_result_from_redis(f"Senseguard:Oauth2:Login:{timestamp[0]}")
+        # print(f"当前获取到的验证码为：{captcha_code}")
         return captcha_code
 
 
@@ -142,5 +148,13 @@ if __name__ == '__main__':
     from selenium import webdriver
     driver = webdriver.Chrome()
     driver.get("http://10.151.3.96/login")
+
     # 测试ssh连接服务器进行验证码获取来进行登录
-    LoginPage(driver).login("zhuwenqin", "888888", login_way="ssh")
+    # LoginPage(driver).login("zhuwenqin", "888888", login_way="ssh")
+
+    # 设置默认通过redis来识别验证码并进行登录
+    LoginPage(driver).login("zhuwenqin", "888888")
+
+    time.sleep(4)
+    driver.quit()
+
