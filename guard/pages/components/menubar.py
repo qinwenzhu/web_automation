@@ -36,7 +36,7 @@ class MenubarPage(BasePage):
 
 if __name__ == '__main__':
     from selenium import webdriver
-    from guard.pages.login import LoginPage
+    from guard.pages.login_page import LoginPage
     import time
     driver = webdriver.Chrome()
     driver.get("http://10.151.3.96/login")

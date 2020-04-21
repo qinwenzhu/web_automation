@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # @Time: 2020/3/17 10:17
 # @Author: wenqin_zhu
-# @File: login.py
+# @File: login_page.py
 # @Software: PyCharm
 
 # 导入正则表达式
@@ -156,4 +156,3 @@ if __name__ == '__main__':
 
     time.sleep(4)
     driver.quit()
-

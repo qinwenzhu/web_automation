@@ -6,8 +6,8 @@
 
 import re
 import pytest
-from guard.pages.components.group_tree import GroupTree
-from guard.pages.user import UserPage
+from guard.pages.components.group_tree import GroupTreePage
+from guard.pages.user_page import UserPage
 
 
 @pytest.mark.positive
@@ -55,10 +55,10 @@ def test_create_next_dep_from_default(user, sole_group_name):
 @pytest.mark.error
 def test_search_dep_by_name(user):
     # 测试group_tree的搜索功能
-    GroupTree(user[0]).search_dep_by_name(user[1])
+    GroupTreePage(user[0]).search_dep_by_name(user[1])
 
     # 断言搜索到的内容<前端缩略显示的>在user字符串内
-    result = GroupTree(user[0]).judge_search_success(user[1])
+    result = GroupTreePage(user[0]).judge_search_success(user[1])
     # print(result)
     assert re.match("^UDN-[0-9a-zA-Z]+.{3}", result)
     """

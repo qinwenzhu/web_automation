@@ -7,7 +7,7 @@
 import re
 import time
 import pytest
-from guard.pages.timezone import TimezonePage
+from guard.pages.timezone_page import TimezonePage
 from guard.pages.classes.web_global_info import GlobalDialogInfo
 
 

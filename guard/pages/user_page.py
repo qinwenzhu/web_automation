@@ -1,13 +1,13 @@
 # -*- coding:utf-8 -*-
 # @Time: 2020/3/30 18:52
 # @Author: wenqin_zhu
-# @File: user.py
+# @File: user_page.py
 # @Software: PyCharm
 
 import time
 from selenium.webdriver.common.by import By
 from guard.pages.classes.basepage import BasePage
-from guard.pages.components.group_tree import GroupTree
+from guard.pages.components.group_tree import GroupTreePage
 
 
 class UserPage(BasePage):
@@ -20,26 +20,26 @@ class UserPage(BasePage):
         """
         if is_peer:
             # 滑动到创建同级分组
-            GroupTree(self.driver).click_menu_by_name("Default", "创建同级")
+            GroupTreePage(self.driver).click_menu_by_name("Default", "创建同级")
             # 动态定位title 为 创建同级
-            GroupTree(self.driver).create_dep_group_com(group_name, "创建同级")
+            GroupTreePage(self.driver).create_dep_group_com(group_name, "创建同级")
         else:
             # 滑动到创建下一级分组
-            GroupTree(self.driver).click_menu_by_name("Default", "创建下一级")
+            GroupTreePage(self.driver).click_menu_by_name("Default", "创建下一级")
             # 动态定位title 为 创建下一级
-            GroupTree(self.driver).create_dep_group_com(group_name, "创建下一级")
+            GroupTreePage(self.driver).create_dep_group_com(group_name, "创建下一级")
 
     def create_department_from_user_defined(self, group_name, parent_name="Default", is_peer=True):
         if is_peer:
             # 滑动到创建同级分组
-            GroupTree(self.driver).click_menu_by_name(parent_name, "创建同级")
+            GroupTreePage(self.driver).click_menu_by_name(parent_name, "创建同级")
             # 动态定位title 为 创建同级
-            GroupTree(self.driver).create_dep_group_com(group_name, "创建同级")
+            GroupTreePage(self.driver).create_dep_group_com(group_name, "创建同级")
         else:
             # 滑动到创建下一级分组
-            GroupTree(self.driver).click_menu_by_name(parent_name, "创建下一级")
+            GroupTreePage(self.driver).click_menu_by_name(parent_name, "创建下一级")
             # 动态定位title 为 创建下一级
-            GroupTree(self.driver).create_dep_group_com(group_name, "创建下一级")
+            GroupTreePage(self.driver).create_dep_group_com(group_name, "创建下一级")
 
     def delete_department_by_name(self, sub_name=None, parent_name="Default", is_peer=True, delete=True):
         """
@@ -50,22 +50,22 @@ class UserPage(BasePage):
         :param delete: 判断点击删除还是取消按钮，默认删除
         """
         if is_peer:
-            GroupTree(self.driver).click_group_by_name(parent_name)
+            GroupTreePage(self.driver).click_group_by_name(parent_name)
             # 滑动到删除
-            GroupTree(self.driver).click_menu_by_name(parent_name, "删除")
+            GroupTreePage(self.driver).click_menu_by_name(parent_name, "删除")
         else:
             # 点击父级分组，出现子级分组列表
-            GroupTree(self.driver).click_group_by_name(parent_name)
+            GroupTreePage(self.driver).click_group_by_name(parent_name)
             time.sleep(0.5)
             # 滑动到删除
-            GroupTree(self.driver).click_menu_by_name(sub_name, "删除")
+            GroupTreePage(self.driver).click_menu_by_name(sub_name, "删除")
 
         if delete:
             # 点击删除按钮
-            GroupTree(self.driver).delete_dep_group_com()
+            GroupTreePage(self.driver).delete_dep_group_com()
         else:
             # 点击取消按钮
-            GroupTree(self.driver).delete_dep_group_com(delete=False)
+            GroupTreePage(self.driver).delete_dep_group_com(delete=False)
 
     def judge_alert_info(self):
         # 定位alert弹框的文本
@@ -82,7 +82,7 @@ class UserPage(BasePage):
 if __name__ == '__main__':
     from selenium import webdriver
     from guard.pages.components.menubar import MenubarPage
-    from guard.pages.login import LoginPage
+    from guard.pages.login_page import LoginPage
     driver = webdriver.Chrome()
     driver.get("http://10.151.3.96/login")
     LoginPage(driver).login("zhuwenqin", "888888", login_way="ssh")

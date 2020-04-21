@@ -10,11 +10,11 @@ import uuid
 import pytest
 from selenium import webdriver
 
-from guard.pages.login import LoginPage
+from guard.pages.login_page import LoginPage
 from guard.pages.components.menubar import MenubarPage
-from guard.pages.tool import ToolPage
-from guard.pages.timezone import TimezonePage
-from guard.pages.user import UserPage
+from guard.pages.tool_page import ToolPage
+from guard.pages.timezone_page import TimezonePage
+from guard.pages.user_page import UserPage
 
 from guard.pages.classes.custom_share_path import SharePath
 from guard.pages.classes.web_global_info import GlobalDialogInfo
@@ -47,7 +47,7 @@ def connect_mysql_and_close():
     database.close()
 
 
-""" ---------------------------- 启动/关闭 webdriver服务 ---------------------------- """
+""" ---------------------------- 启动/关闭 WebDriver服务 ---------------------------- """
 @pytest.fixture(scope="module")
 def start_driver_and_quit():
     # 前置 - 启动会话窗口 后置 - 关闭
@@ -57,7 +57,7 @@ def start_driver_and_quit():
     driver.quit()
 
 
-""" ---------------------------- 网页的模块登陆 ---------------------------- """
+""" ---------------------------- 系统登录 ---------------------------- """
 @pytest.fixture(scope="module")
 def login(start_driver_and_quit):
     # 成功登录网站
@@ -72,7 +72,16 @@ def login(start_driver_and_quit):
     yield start_driver_and_quit
 
 
-""" ---------------------------- 时间条件 timezone ---------------------------- """
+""" ---------------------------- 配置-地图管理 ---------------------------- """
+@pytest.fixture(scope="module")
+def map_module(login):
+    # 进入地图管理模块
+    MenubarPage(login).click_nav_item("配置", "地图管理")
+    before_name = {"map_group_name": f"FGN-{uuid4_data()}"}
+    yield login, before_name
+
+
+""" ---------------------------- 配置-时间条件 ---------------------------- """
 @pytest.fixture(scope="module")
 def timezone(login):
     # 进入时间条件模块
@@ -93,7 +102,7 @@ def overlong_name():
     yield sole_name
 
 
-""" ---------------------------- 用户管理 user ---------------------------- """
+""" ---------------------------- 配置-用户管理 ---------------------------- """
 @pytest.fixture(scope="module")
 def user(login):
     # 进入用户管理模块
@@ -140,7 +149,7 @@ def del_sub_dep_name_to_user(user, sole_group_name):
     time.sleep(2)
 
 
-""" ---------------------------- 工具 tool ---------------------------- """
+""" ---------------------------- 工具 ---------------------------- """
 @pytest.fixture(scope="function")
 def tool_close_one_to_one_face_compare(login):
     # 后置：关闭当前窗口 - 1:1人脸验证
@@ -162,7 +171,7 @@ def tool_close_face_score_detection(login):
     ToolPage(login).close_tool_current_win("tools-test-detection")
 
 
-""" ---------------------------- 登录 login ---------------------------- """
+""" ---------------------------- 登录模块 ---------------------------- """
 @pytest.fixture
 def setup_login():
     driver = webdriver.Chrome()

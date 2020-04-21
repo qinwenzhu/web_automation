@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from guard.pages.classes.basepage import BasePage
 
 
-class GroupTree(BasePage):
+class GroupTreePage(BasePage):
 
     def click_group_by_name(self, department_name):
         """ 点击左侧树图分组 """

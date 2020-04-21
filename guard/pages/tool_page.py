@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # @Time: 2020/3/24 19:46
 # @Author: wenqin_zhu
-# @File: tool.py
+# @File: tool_page.py
 # @Software: PyCharm
 
 
@@ -85,7 +85,7 @@ class ToolPage(BasePage):
 if __name__ == '__main__':
     from selenium import webdriver
     from guard.pages.components.menubar import MenubarPage
-    from guard.pages.login import LoginPage
+    from guard.pages.login_page import LoginPage
     driver = webdriver.Chrome()
     driver.get("http://10.151.3.96/login")
     LoginPage(driver).login("zhuwenqin", "888888", login_way="ssh")

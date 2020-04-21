@@ -6,7 +6,7 @@
 
 
 import pytest
-from guard.pages.login import LoginPage
+from guard.pages.login_page import LoginPage
 from guard.datas.login_data import LoginData
 from guard.pages.classes.web_global_info import GlobalDialogInfo
 

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # @Time: 2020/4/10 16:09
 # @Author: wenqin_zhu
-# @File: timezone.py
+# @File: timezone_page.py
 # @Software: PyCharm
 
 import time
@@ -192,7 +192,7 @@ class TimezonePage(BasePage):
 if __name__ == '__main__':
     from selenium import webdriver
     from guard.pages.components.menubar import MenubarPage
-    from guard.pages.login import LoginPage
+    from guard.pages.login_page import LoginPage
     driver = webdriver.Chrome()
     driver.get("http://10.151.3.96/login")
     LoginPage(driver).login("zhuwenqin", "888888", login_way="ssh")
