@@ -72,6 +72,15 @@ def login(start_driver_and_quit):
     yield start_driver_and_quit
 
 
+""" ---------------------------- 配置-设备管理 ---------------------------- """
+@pytest.fixture(scope="module")
+def device(login):
+    # 进入地图管理模块
+    MenubarPage(login).click_nav_item("配置", "设备管理")
+    before_name = {"device_group_name": f"DGN-{uuid4_data()}"}
+    yield login, before_name
+
+
 """ ---------------------------- 配置-地图管理 ---------------------------- """
 @pytest.fixture(scope="module")
 def map_module(login):

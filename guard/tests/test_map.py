@@ -3,8 +3,8 @@
 # @Author: wenqin_zhu
 # @File: test_map.py
 # @Software: PyCharm
-import time
 
+import time
 import pytest
 from guard.pages.components.group_tree import GroupTreePage
 from guard.pages.map_page import MapPage
