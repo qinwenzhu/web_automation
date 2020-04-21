@@ -10,63 +10,68 @@ from guard.pages.components.group_tree import GroupTree
 from guard.pages.user import UserPage
 
 
-class TestUser:
+@pytest.mark.positive
+@pytest.mark.smoke
+@pytest.mark.usefixtures("close_alert")
+def test_create_peer_dep_from_default(user):
+    # 测试从Default根分组创建同级分组
+    UserPage(user[0]).create_department_from_Default(user[1])
 
-    @pytest.mark.positive
-    @pytest.mark.usefixtures("close_alert")
-    def test_create_peer_dep_from_Default(self, user):
-        # 测试从Default根分组创建同级分组
-        UserPage(user[0]).create_department_from_Default(user[1])
+    result = UserPage(user[0]).judge_alert_info()
+    assert "创建同级分组成功" == result
 
-        result = UserPage(user[0]).judge_alert_info()
-        assert "创建同级分组成功" == result
 
-    @pytest.mark.positive
-    @pytest.mark.usefixtures("close_alert", "del_sub_dep_name_to_user")
-    def test_create_next_dep_from_user_defined(self, user, sole_group_name):
-        # 测试从用户自定义分组创建下一级分组
-        UserPage(user[0]).create_department_from_user_defined(group_name=sole_group_name, parent_name=user[1], is_peer=False)
+@pytest.mark.positive
+@pytest.mark.smoke
+@pytest.mark.usefixtures("close_alert", "del_sub_dep_name_to_user")
+def test_create_next_dep_from_user_defined(user, sole_group_name):
+    # 测试从用户自定义分组创建下一级分组
+    UserPage(user[0]).create_department_from_user_defined(group_name=sole_group_name, parent_name=user[1], is_peer=False)
 
-        result = UserPage(user[0]).judge_alert_info()
-        assert "创建下一级分组成功" == result
+    result = UserPage(user[0]).judge_alert_info()
+    assert "创建下一级分组成功" == result
 
-    @pytest.mark.positive
-    @pytest.mark.usefixtures("close_alert", "del_dep_name_to_user")
-    def test_create_peer_dep_from_user_defined(self, user, sole_group_name):
-        # 测试从用户自定义分组创建同级分组
-        UserPage(user[0]).create_department_from_user_defined(group_name=sole_group_name, parent_name=user[1])
 
-        result = UserPage(user[0]).judge_alert_info()
-        assert "创建同级分组成功" == result
+@pytest.mark.positive
+@pytest.mark.usefixtures("close_alert", "del_dep_name_to_user")
+def test_create_peer_dep_from_user_defined(user, sole_group_name):
+    # 测试从用户自定义分组创建同级分组
+    UserPage(user[0]).create_department_from_user_defined(group_name=sole_group_name, parent_name=user[1])
 
-    @pytest.mark.positive
-    @pytest.mark.usefixtures("close_alert", "del_sub_dep_name_to_default")
-    def test_create_next_dep_from_Default(self, user, sole_group_name):
-        # 测试从Default根分组创建下一级分组
-        UserPage(user[0]).create_department_from_Default(sole_group_name, is_peer=False)
+    result = UserPage(user[0]).judge_alert_info()
+    assert "创建同级分组成功" == result
 
-        result = UserPage(user[0]).judge_alert_info()
-        assert "创建下一级分组成功" == result
 
-    @pytest.mark.error
-    def test_search_dep_by_name(self, user):
-        # 测试group_tree的搜索功能
-        GroupTree(user[0]).search_dep_by_name(user[1])
+@pytest.mark.positive
+@pytest.mark.usefixtures("close_alert", "del_sub_dep_name_to_default")
+def test_create_next_dep_from_default(user, sole_group_name):
+    # 测试从Default根分组创建下一级分组
+    UserPage(user[0]).create_department_from_Default(sole_group_name, is_peer=False)
 
-        # 断言搜索到的内容<前端缩略显示的>在user字符串内
-        result = GroupTree(user[0]).judge_search_success(user[1])
-        # print(result)
-        assert re.match("^UDN-[0-9a-zA-Z]{6}.{3}", result)
-        """
-        # 此时使用正则表达式进行匹配结果
-        # ^UDN-[0-9a-zA-Z]{6}.{3}
-        # ^UDN-：以UDN-开头； [0-9a-zA-Z]{6}：0-9/a-z/A-Z匹配数字6次； .{3}：匹配除换行符以外的字符，此处用于匹配点号，匹配3次
-        """
+    result = UserPage(user[0]).judge_alert_info()
+    assert "创建下一级分组成功" == result
 
-    @pytest.mark.positive
-    @pytest.mark.usefixtures("close_alert")
-    def test_delete_peer_dep_from_Default(self, user):
-        UserPage(user[0]).delete_department_by_name(parent_name=user[1])
 
-        result = UserPage(user[0]).judge_alert_info()
-        assert "删除分组成功" == result
+@pytest.mark.error
+def test_search_dep_by_name(user):
+    # 测试group_tree的搜索功能
+    GroupTree(user[0]).search_dep_by_name(user[1])
+
+    # 断言搜索到的内容<前端缩略显示的>在user字符串内
+    result = GroupTree(user[0]).judge_search_success(user[1])
+    # print(result)
+    assert re.match("^UDN-[0-9a-zA-Z]+.{3}", result)
+    """
+    # 此时使用正则表达式进行匹配结果
+    # ^UDN-[0-9a-zA-Z]{6}.{3}
+    # ^UDN-：以UDN-开头； [0-9a-zA-Z]+：0-9/a-z/A-Z匹配数字6次，+代表1次或多次； .{3}：匹配除换行符以外的字符，此处用于匹配点号，匹配3次
+    """
+
+
+@pytest.mark.positive
+@pytest.mark.usefixtures("close_alert")
+def test_delete_peer_dep_from_default(user):
+    UserPage(user[0]).delete_department_by_name(parent_name=user[1])
+
+    result = UserPage(user[0]).judge_alert_info()
+    assert "删除分组成功" == result

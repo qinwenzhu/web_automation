@@ -151,7 +151,6 @@ if __name__ == '__main__':
 
     # 测试ssh连接服务器进行验证码获取来进行登录
     # LoginPage(driver).login("zhuwenqin", "888888", login_way="ssh")
-
     # 设置默认通过redis来识别验证码并进行登录
     LoginPage(driver).login("zhuwenqin", "888888")
 

@@ -12,6 +12,7 @@ from guard.pages.classes.web_global_info import GlobalDialogInfo
 
 
 @pytest.mark.positive
+@pytest.mark.smoke
 def test_login_success(setup_login):
     # 登录成功校验
     LoginPage(setup_login).login(*LoginData.success_login_data, login_way="ssh")

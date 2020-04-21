@@ -15,6 +15,7 @@ from guard.pages.classes.web_global_info import GlobalDialogInfo
 
 
 @pytest.mark.positive
+@pytest.mark.smoke
 @pytest.mark.usefixtures("tool_close_one_to_one_face_compare")
 def test_one_to_one_face_compare(login):
     """ 测试1:1人脸验证功能 """
@@ -26,6 +27,7 @@ def test_one_to_one_face_compare(login):
 
 
 @pytest.mark.positive
+@pytest.mark.smoke
 @pytest.mark.parametrize("data", ToolData.score_detection_data_negative)
 @pytest.mark.usefixtures("tool_close_one_img_quality")
 def test_score_detection(login, data):
@@ -50,6 +52,7 @@ def test_negative_score_detection(login):
 
 
 @pytest.mark.positive
+@pytest.mark.smoke
 @pytest.mark.usefixtures("tool_close_face_score_detection")
 def test_face_property(login):
     """ 测试人脸属性输出的属性字段 """
@@ -73,6 +76,7 @@ def test_face_property(login):
 
 
 @pytest.mark.negative
+@pytest.mark.smoke
 @pytest.mark.usefixtures("tool_close_face_score_detection")
 @pytest.mark.parametrize("data", ToolData.face_data_negative)
 def test_negative_face_property(login, data):

@@ -12,6 +12,7 @@ from guard.pages.classes.web_global_info import GlobalDialogInfo
 
 
 @pytest.mark.positive
+@pytest.mark.smoke
 def test_add_timezone(connect_mysql_and_close, timezone):
     # 测试添加时间条件
     TimezonePage(timezone[0]).add_timezone(timezone[1]["timezone"])
@@ -25,6 +26,7 @@ def test_add_timezone(connect_mysql_and_close, timezone):
 
 
 @pytest.mark.positive
+@pytest.mark.smoke
 def test_add_timezone_section(timezone):
     # 通过选择 指定的时间条件名称 创建时间段
     TimezonePage(timezone[0]).add_timezone_section_by_timezone_name(timezone[1]["timezone"])
@@ -35,6 +37,7 @@ def test_add_timezone_section(timezone):
 
 
 @pytest.mark.positive
+@pytest.mark.smoke
 def test_create_holidays(connect_mysql_and_close, timezone):
     # 测试添加假期
     TimezonePage(timezone[0]).create_holidays("添加假期", timezone[1]["holiday_name"], num=1)
@@ -48,6 +51,7 @@ def test_create_holidays(connect_mysql_and_close, timezone):
 
 
 @pytest.mark.positive
+@pytest.mark.smoke
 def test_create_workday(connect_mysql_and_close, timezone):
     # 测试添加特殊工作日
     TimezonePage(timezone[0]).create_workday("添加特殊工作日", timezone[1]["workday_name"], num=1)
