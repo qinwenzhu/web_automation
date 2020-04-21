@@ -4,11 +4,9 @@
 # @File: map_page.py
 # @Software: PyCharm
 
-import time
 from selenium.webdriver.common.by import By
 from guard.pages.classes.basepage import BasePage
 from guard.pages.components.group_tree import GroupTreePage
-from guard.pages.classes.custom_share_path import SharePath
 
 
 class MapPage(BasePage):
@@ -30,12 +28,12 @@ class MapPage(BasePage):
             # 动态定位title 为 创建下一级
             GroupTreePage(self.driver).create_dep_group_com(group_name, "创建下一级")
 
-    def upload_map(self):
+    def upload_map(self, file_name):
         """ 地图上传 """
         # 定位上传按钮
         UPLOAD_BTN = (By.XPATH, '//input[@class="el-upload__input"]')
         # 地图上传
-        BasePage(self.driver).update_input_text(UPLOAD_BTN, r"{}/map_data/company_4th_floor.jpg".format(SharePath.DATA_FOLDER))
+        BasePage(self.driver).upload_file(loc=UPLOAD_BTN, filename=file_name)
 
 
 if __name__ == '__main__':

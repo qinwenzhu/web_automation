@@ -132,15 +132,14 @@ class BasePage:
             self.log.error(f"文本输入失败！")
             raise e
 
-    def upload_file(self, loc, filename=None, img_describe="current", flag=True, file_path=None, browser_type="chrome"):
+    def upload_file(self, loc, filename=None, flag=True, browser_type="chrome", img_describe="current"):
         """
         文件上传
-        :param loc: 元素定位
-        :param filename: input标签的type=file时传递的文件路径
-        :param img_describe: 截图命名描述
-        :param flag: 判断是否是input标签的文件上传还是win系统的窗口上传，默认True为input文件上传
-        :param file_path: win窗口上传的文件路径
+        :param loc: 元素定位表达式
+        :param filename: 文件上传路径
+        :param flag: 判断是否是input标签的文件上传还是win系统的窗口上传，默认：input文件上传
         :param browser_type: win窗口上传时打开的当前浏览器
+        :param img_describe: 截图命名描述
         """
 
         ele = self.get_ele_locator(loc, img_describe)
@@ -156,7 +155,7 @@ class BasePage:
         else:
             try:
                 # windows窗口 的文件上传 - 调用utils共用类进行上传操作
-                upload(file_path, browser_type)
+                upload(filename, browser_type)
             except Exception as e:
                 self.save_web_screenshots(img_describe)
                 self.log.error(f"文件上传失败！")
