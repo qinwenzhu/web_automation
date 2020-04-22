@@ -186,6 +186,8 @@ class BasePage:
             self.save_web_screenshots(img_describe)
             self.log.error(f"鼠标移动到元素失败！")
             raise e
+        else:
+            return ele
 
     def mouse_move_ele_and_click(self, loc1, loc2, pause_time=2, img_describe="current"):
         """  鼠标移动到指定元素上并进行列表的点击操作 """

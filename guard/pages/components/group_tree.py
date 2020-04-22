@@ -27,7 +27,7 @@ class GroupTreePage(BasePage):
 
         # 通过传入不同的 menu_name 滑动到不同的操作
         GROUP_MENU_NAME = (By.XPATH, f'//div[@id="menu"]//li[@class="menu" and contains(text(), "{menu_name}")]')
-        BasePage(self.driver).mouse_move_ele_and_click(GROUP_ICON, GROUP_MENU_NAME, img_describe="左侧组件-tree")
+        BasePage(self.driver).mouse_move_ele_and_click(GROUP_ICON, GROUP_MENU_NAME)
 
     def create_dep_group_com(self, group_name, loc_by_til_name, confirm=True):
         """

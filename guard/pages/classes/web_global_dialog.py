@@ -18,11 +18,9 @@ class GlobalDialog(BasePage):
 
         if is_delete:
             # 点击删除按钮
-            # //div[@class="el-dialog__header"]
             CONFIRM_BTN = (By.XPATH, '//button//span[contains(text(), "删除")]')
             BasePage(self.driver).click_ele(CONFIRM_BTN)
         else:
             # 点击取消按钮
-            CONFIRM_BTN = (By.XPATH,
-                           '//button//span[contains(text(), "取消")]')
+            CONFIRM_BTN = (By.XPATH, '//button//span[contains(text(), "取消")]')
             BasePage(self.driver).click_ele(CONFIRM_BTN)
