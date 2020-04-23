@@ -35,6 +35,8 @@ class HandleDB(object):
         :param args: 查询参数。 参数的传参数据格式为：序列类型
         :param is_more: 查询结果是否展示多条。 默认显示一条
         :return: 返回数据库查询结果
+
+        SELECT * / 指定表中的字段名 FROM 表名 [WHERE 条件];
         """
         self.cursor.execute(sql, args=args)
         self.conn_db.commit()
@@ -42,6 +44,17 @@ class HandleDB(object):
             return self.cursor.fetchall()
         else:
             return self.cursor.fetchone()
+
+    def update_database(self, sql, args=None):
+        """
+        数据库更新
+        :param sql: 更新语句
+        :param args: 参数。包括 字段名对应的值 或 条件参数
+
+        UPDATE 表名 SET 字段名1=值1,[字段名1=值1,……] [WHERE 条件]
+        """
+        self.cursor.execute(sql, args=args)
+        self.conn_db.commit()
 
     def close(self):
         # 关闭游标
@@ -56,14 +69,28 @@ if __name__ == '__main__':
 
     #  调用封装的数据库查询方法
     # 方式-：查询动态传入参数的
-    time_zone = "TimeZone-a1fceba3-1afe-46"
-    sql1 = 'SELECT * FROM senseguard.info_time_zone WHERE time_zone_name=%s;'
-    print(sql1)
-    db_result1 = do_mysql.select_database(sql1, args=(time_zone, ), is_more=False)
-    print(db_result1)
+    # time_zone = "TimeZone-a1fceba3-1afe-46"
+    # sql1 = 'SELECT * FROM senseguard.info_time_zone WHERE time_zone_name=%s;'
+    # print(sql1)
+    # db_result1 = do_mysql.select_database(sql1, args=(time_zone, ), is_more=False)
+    # print(db_result1)
+    #
+    # # 方式二：查询表内所有
+    # sql2 = 'SELECT * FROM senseguard.info_time_zone;'
+    # db_result2 = do_mysql.select_database(sql2, is_more=True)
+    # print(sql2)
+    # print(db_result2)
 
-    # 方式二：查询表内所有
-    sql2 = 'SELECT * FROM senseguard.info_time_zone;'
-    db_result2 = do_mysql.select_database(sql2, is_more=True)
-    print(sql2)
-    print(db_result2)
+    # 查询
+    data = {"username": "libo"}
+    select_sql = 'SELECT pwd_err_num FROM senseguard.info_user where username = %s;'
+    result = do_mysql.select_database(sql=select_sql, args=(data["username"],))
+    print(result["pwd_err_num"])
+
+    # 修改
+    update_sql = 'UPDATE senseguard.info_user SET pwd_err_num=0 WHERE username = %s;'
+    do_mysql.update_database(sql=update_sql, args=(data["username"]))
+
+    select_sql = 'SELECT pwd_err_num FROM senseguard.info_user where username = %s;'
+    result = do_mysql.select_database(sql=select_sql, args=(data["username"],))
+    print(result["pwd_err_num"])

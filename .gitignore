@@ -6,3 +6,4 @@ guard/tools/__pycache__/
 utils/__pycache__/
 outputs/screenshots/*.jpg
 outputs/logs/*.txt
+outputs/reports/*

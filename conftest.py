@@ -10,11 +10,13 @@ import uuid
 import pytest
 from selenium import webdriver
 
-from guard.pages.login_page import LoginPage
-from guard.pages.components.menubar import MenubarPage
+from guard.pages.map_page import MapPage
 from guard.pages.tool_page import ToolPage
-from guard.pages.timezone_page import TimezonePage
 from guard.pages.user_page import UserPage
+from guard.pages.login_page import LoginPage
+from guard.pages.device_page import DevicePage
+from guard.pages.timezone_page import TimezonePage
+from guard.pages.components.menubar import MenubarPage
 
 from guard.pages.classes.custom_share_path import SharePath
 from guard.pages.classes.web_global_info import GlobalDialogInfo
@@ -70,6 +72,18 @@ def login(start_driver_and_quit):
     LoginPage(start_driver_and_quit).login(f'{env()["username"]}',
                                            f'{env()["password"]}')
     yield start_driver_and_quit
+
+
+""" ---------------------------- 共用前置数据 ---------------------------- """
+@pytest.fixture(scope="module")
+def setup_device(login):
+    before_name = {"device_group_name": f"DGN-{uuid4_data()}",
+                   "device_name": f"DN-{uuid4_data()}", "device_id": f"{uuid4_data()}"}
+    MenubarPage(login).click_nav_item("配置", "设备管理")
+    DevicePage(login).add_device_group_from_Default(before_name["device_group_name"])
+    time.sleep(3)
+    login.refresh()
+    yield login, before_name
 
 
 """ ---------------------------- 配置-设备管理 ---------------------------- """
