@@ -42,6 +42,11 @@ class ToolPage(BasePage):
         BasePage(self.driver).upload_file(IMAGE_UPLOAD_INPUT, path)
         BasePage(self.driver).click_ele(CHECK_CONTENT_DETECTION_BUTTON)
 
+    def check_img_size(self, path):
+        # 检测超出系统支持的图片尺寸
+        IMAGE_UPLOAD_INPUT = (By.CSS_SELECTOR, 'input[type="file"]')
+        BasePage(self.driver).upload_file(IMAGE_UPLOAD_INPUT, path)
+
     def get_face_image_quality_result(self):
         # 获取人脸质量分数的检测结果
         CHECK_CONTENT_DETECTION_BUTTON_RESULT = (By.XPATH, '//div[@class="app-tools-content-center"]//span')
