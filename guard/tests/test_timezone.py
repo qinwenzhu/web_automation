@@ -77,6 +77,14 @@ class TestTimezoneNegative:
         result = GlobalDialogInfo(timezone[0]).judge_alert_info()
         assert "请输入最多40个字符的时间条件名称" == result
 
+    def test_add_same_name_to_timezone(self, timezone):
+        # 测试添加同名的时间条件
+        TimezonePage(timezone[0]).add_timezone(timezone[1]["timezone"])
+
+        # 断言
+        result = GlobalDialogInfo(timezone[0]).judge_alert_info()
+        assert "资源被占用或不存在" == result
+
     def test_add_holidays_negative_conflict(self, timezone, overlong_name):
         # 测试添加假期与页面现有的假期时间冲突
         TimezonePage(timezone[0]).create_holidays("添加假期", overlong_name)
