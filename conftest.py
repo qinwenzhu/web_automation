@@ -9,7 +9,9 @@ import uuid
 
 import pytest
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
+from guard.pages.classes.basepage import BasePage
 from guard.pages.map_page import MapPage
 from guard.pages.tool_page import ToolPage
 from guard.pages.user_page import UserPage
@@ -20,7 +22,9 @@ from guard.pages.components.menubar import MenubarPage
 from guard.pages.components.group_tree import GroupTreePage
 
 from guard.pages.classes.custom_share_path import SharePath
+from guard.pages.classes.web_global_dialog import GlobalDialog
 from guard.pages.classes.web_global_info import GlobalDialogInfo
+
 
 from utils.handle_config import HandleConfig
 from utils.handle_database import HandleDB
@@ -103,7 +107,22 @@ def map_module(login):
     MenubarPage(login).click_nav_item("配置", "地图管理")
     before_name = {"map_group_name": f"FGN-{uuid4_data()}"}
     yield login, before_name
-    GroupTreePage(login).delete_peer_ot_next_group_by_name(parent_name=before_name["map_group_name"], module_val="map")
+    GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["map_group_name"], module_val="map")
+
+
+@pytest.fixture
+def del_sub_map_group_to_default(map_module, sole_group_name):
+    yield
+    # 删除Default分组的下一级分组，只有当Default下没有该元素的时候，才说明下一级地图分组创建成功，才进行后置删除操作
+    if not MapPage(map_module[0]).judge_upload_map_success():
+        GroupTreePage(map_module[0]).delete_peer_or_next_group_by_name(group_name=sole_group_name, parent_name="Default", module_val="map", is_peer=False)
+
+
+@pytest.fixture
+def close_next_map_group_tree_dialog(login):
+    # 关闭左侧树图弹框 - 当创建已经存在地图分组的下一级组
+    yield
+    GlobalDialog(login).close_dialog_btn("创建下一级")
 
 
 """ ---------------------------- 配置-时间条件 ---------------------------- """
@@ -144,17 +163,10 @@ def close_alert(user):
 
 
 @pytest.fixture
-def sole_group_name():
-    # 分组名称 - 数据唯一性
-    sole_name = f"UDN-{uuid4_data()}"
-    yield sole_name
-
-
-@pytest.fixture
 def del_sub_dep_name_to_default(user, sole_group_name):
     yield
     # 删除Default分组的下一级分组
-    GroupTreePage(user[0]).delete_peer_ot_next_group_by_name(group_name=sole_group_name, module_val="user", is_peer=False)
+    GroupTreePage(user[0]).delete_peer_or_next_group_by_name(group_name=sole_group_name, module_val="user", is_peer=False)
     time.sleep(2)
 
 
@@ -162,7 +174,7 @@ def del_sub_dep_name_to_default(user, sole_group_name):
 def del_dep_name_to_user(user, sole_group_name):
     yield
     # 删除用户自定义分组
-    GroupTreePage(user[0]).delete_peer_ot_next_group_by_name(parent_name=sole_group_name, module_val="user")
+    GroupTreePage(user[0]).delete_peer_or_next_group_by_name(parent_name=sole_group_name, module_val="user")
     time.sleep(2)
 
 
@@ -170,7 +182,7 @@ def del_dep_name_to_user(user, sole_group_name):
 def del_sub_dep_name_to_user(user, sole_group_name):
     yield
     # 删除用户自定义分组的下一级分组
-    GroupTreePage(user[0]).delete_peer_ot_next_group_by_name(group_name=sole_group_name, parent_name=user[1], module_val="user", is_peer=False)
+    GroupTreePage(user[0]).delete_peer_or_next_group_by_name(group_name=sole_group_name, parent_name=user[1], module_val="user", is_peer=False)
     time.sleep(2)
 
 
@@ -217,3 +229,9 @@ def get_current_time():
 def uuid4_data():
     # 生成随机数据
     return str(uuid.uuid4())
+
+
+@pytest.fixture
+def sole_group_name():
+    sole_name = f"UNIQUE-{uuid4_data()}"
+    yield sole_name
