@@ -18,11 +18,11 @@ class MapPage(BasePage):
         # 点击指定地图分组
         GroupTreePage(self.driver).click_group_by_name(group_name)
 
-        # 定位上传按钮
-        UPLOAD_BTN = (By.XPATH, '//input[@class="el-upload__input"]')
         # 地图上传
-        BasePage(self.driver).upload_file(loc=UPLOAD_BTN, filename=file_name)
+        UPLOAD_file = (By.XPATH, '//input[@class="el-upload__input"]')
+        BasePage(self.driver).upload_file(loc=UPLOAD_file, filename=file_name)
         # 等待3秒等待地图上传效果
+        pass
         time.sleep(3)
 
     def judge_upload_map_success(self):

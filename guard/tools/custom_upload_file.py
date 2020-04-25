@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import win32gui
-import win32con
+import win32gui, win32con
 
 """
+需要安装包：pip install win32gui
 自定义：
     针对win系统的文件上传封装的方法
     

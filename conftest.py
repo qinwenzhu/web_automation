@@ -17,6 +17,7 @@ from guard.pages.login_page import LoginPage
 from guard.pages.device_page import DevicePage
 from guard.pages.timezone_page import TimezonePage
 from guard.pages.components.menubar import MenubarPage
+from guard.pages.components.group_tree import GroupTreePage
 
 from guard.pages.classes.custom_share_path import SharePath
 from guard.pages.classes.web_global_info import GlobalDialogInfo
@@ -66,11 +67,11 @@ def login(start_driver_and_quit):
     # 优化：动态传入测试环境  start_driver_and_quit.get("http://10.151.3.96/login")
     start_driver_and_quit.get(f'http://{env()["host"]}/login')
     # 优化：动态传入登陆用户  LoginPage(start_driver_and_quit).login("zhuwenqin", "888888")
-    # LoginPage(start_driver_and_quit).login(f'{env()["username"]}',
-    #                                        f'{env()["password"]}',
-    #                                        login_way=env()["login_way"])
     LoginPage(start_driver_and_quit).login(f'{env()["username"]}',
-                                           f'{env()["password"]}')
+                                           f'{env()["password"]}',
+                                           login_way=env()["login_way"])
+    # LoginPage(start_driver_and_quit).login(f'{env()["username"]}',
+    #                                        f'{env()["password"]}')
     yield start_driver_and_quit
 
 
@@ -102,6 +103,7 @@ def map_module(login):
     MenubarPage(login).click_nav_item("配置", "地图管理")
     before_name = {"map_group_name": f"FGN-{uuid4_data()}"}
     yield login, before_name
+    GroupTreePage(login).delete_peer_ot_next_group_by_name(parent_name=before_name["map_group_name"], module_val="map")
 
 
 """ ---------------------------- 配置-时间条件 ---------------------------- """
@@ -152,7 +154,7 @@ def sole_group_name():
 def del_sub_dep_name_to_default(user, sole_group_name):
     yield
     # 删除Default分组的下一级分组
-    UserPage(user[0]).delete_department_by_name(sub_name=sole_group_name, is_peer=False)
+    GroupTreePage(user[0]).delete_peer_ot_next_group_by_name(group_name=sole_group_name, module_val="user", is_peer=False)
     time.sleep(2)
 
 
@@ -160,7 +162,7 @@ def del_sub_dep_name_to_default(user, sole_group_name):
 def del_dep_name_to_user(user, sole_group_name):
     yield
     # 删除用户自定义分组
-    UserPage(user[0]).delete_department_by_name(parent_name=sole_group_name)
+    GroupTreePage(user[0]).delete_peer_ot_next_group_by_name(parent_name=sole_group_name, module_val="user")
     time.sleep(2)
 
 
@@ -168,7 +170,7 @@ def del_dep_name_to_user(user, sole_group_name):
 def del_sub_dep_name_to_user(user, sole_group_name):
     yield
     # 删除用户自定义分组的下一级分组
-    UserPage(user[0]).delete_department_by_name(sub_name=sole_group_name, parent_name=user[1], is_peer=False)
+    GroupTreePage(user[0]).delete_peer_ot_next_group_by_name(group_name=sole_group_name, parent_name=user[1], module_val="user", is_peer=False)
     time.sleep(2)
 
 

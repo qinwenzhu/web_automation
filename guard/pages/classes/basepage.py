@@ -132,33 +132,33 @@ class BasePage:
             self.log.error(f"文本输入失败！")
             raise e
 
-    def upload_file(self, loc, filename=None, flag=True, browser_type="chrome", img_describe="current"):
+    def upload_file(self, loc, filename=None, upload_way="input", browser_type="chrome", img_describe="current"):
         """
         文件上传
         :param loc: 元素定位表达式
         :param filename: 文件上传路径
-        :param flag: 判断是否是input标签的文件上传还是win系统的窗口上传，默认：input文件上传
+        :param upload_way: 判断上传文件的类型。input类型或者win文件类型
         :param browser_type: win窗口上传时打开的当前浏览器
         :param img_describe: 截图命名描述
         """
 
         ele = self.get_ele_locator(loc, img_describe)
         self.log.info(f"文件上传：{img_describe}页面的-{loc[-1]}元素")
-        if flag:
+        if upload_way == "input":
             try:
                 # <input type=file /> input类型的上传操作
                 ele.send_keys(filename)
             except Exception as e:
                 self.save_web_screenshots(img_describe)
-                self.log.error(f"文件上传失败！")
+                self.log.error("input_file，文件上传失败！")
                 raise e
-        else:
+        elif upload_way == "win":
             try:
                 # windows窗口 的文件上传 - 调用utils共用类进行上传操作
-                upload(filename, browser_type)
+                upload(file_path=filename, browser_type=browser_type)
             except Exception as e:
                 self.save_web_screenshots(img_describe)
-                self.log.error(f"文件上传失败！")
+                self.log.error("wiin窗口，文件上传失败！")
                 raise e
 
     def click_ele(self, loc, img_describe="current"):
@@ -171,7 +171,7 @@ class BasePage:
             ele.click()
         except Exception as e:
             self.save_web_screenshots(img_describe)
-            self.log.error(f"点击元素失败！")
+            self.log.error("点击元素失败！")
             raise e
 
     def mouse_move_ele(self, loc, img_describe="current"):
