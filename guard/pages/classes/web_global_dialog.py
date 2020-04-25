@@ -12,8 +12,12 @@ from guard.pages.classes.basepage import BasePage
 class GlobalDialog(BasePage):
     """ 封装类：系统dialog弹框操作 """
 
-    """ 通用：系统页面删除dialog """
+    """ group_tree 弹框顶部的关闭弹窗按钮 """
+    def close_dialog_btn(self, til_name):
+        CLOSE_BTN = (By.XPATH, f'//span[contains(text(), "{til_name}")]/parent::div//button')
+        BasePage(self.driver).click_ele(CLOSE_BTN)
 
+    """ 通用：系统页面删除dialog """
     def dialog_delete(self, is_delete=True):
 
         if is_delete:

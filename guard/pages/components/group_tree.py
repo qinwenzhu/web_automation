@@ -104,7 +104,7 @@ class GroupTreePage(BasePage):
             # 动态定位title 为 创建下一级
             GroupTreePage(self.driver).create_dep_group_com(group_name, "创建下一级")
 
-    def delete_peer_ot_next_group_by_name(self, group_name=None, parent_name="Default", module_val="user", is_peer=True, delete=True):
+    def delete_peer_or_next_group_by_name(self, group_name=None, parent_name="Default", module_val="user", is_peer=True, delete=True):
         """
         通过组名称删除分组
         :param group_name: 子级分组
