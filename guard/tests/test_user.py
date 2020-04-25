@@ -63,7 +63,7 @@ class TestUserPositive:
 
     @pytest.mark.usefixtures("close_alert")
     def test_delete_peer_dep_from_default(self, user):
-        GroupTreePage(user[0]).delete_peer_ot_next_group_by_name(parent_name=user[1])
+        GroupTreePage(user[0]).delete_peer_or_next_group_by_name(parent_name=user[1])
 
         result = GlobalDialogInfo(user[0]).judge_alert_info()
         assert "删除分组成功" == result
