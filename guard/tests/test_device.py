@@ -17,7 +17,7 @@ class TestDevicePositive:
 
     def test_create_peer_device_group_from_default(self, device):
         # 测试从Default分组创建同级地图分组
-        GroupTreePage(device[0]).create_peer_or_next_group(device[1]["device_group_name"])
+        GroupTreePage(device[0]).create_peer_or_next_group(group_name=device[1]["device_group_name"], parent_name="Default")
 
         result = GlobalDialogInfo(device[0]).judge_alert_info()
         assert "创建同级分组成功" == result
