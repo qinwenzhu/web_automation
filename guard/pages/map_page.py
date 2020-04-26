@@ -12,7 +12,7 @@ from guard.pages.components.group_tree import GroupTreePage
 
 class MapPage(BasePage):
 
-    def upload_map(self, file_name, group_name="Default"):
+    def upload_map(self, file_name, group_name):
         """ 地图上传 """
 
         # 点击指定地图分组

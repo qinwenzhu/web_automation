@@ -18,7 +18,7 @@ class TestMapPositive:
 
     def test_create_peer_map_group_from_default(self, map_module):
         # 测试从Default分组创建同级地图分组
-        GroupTreePage(map_module[0]).create_peer_or_next_group(group_name=map_module[1]["map_group_name"])
+        GroupTreePage(map_module[0]).create_peer_or_next_group(group_name=map_module[1]["map_group_name"], parent_name="Default")
 
         result = GlobalDialogInfo(map_module[0]).judge_alert_info()
         assert "创建同级分组成功" == result
