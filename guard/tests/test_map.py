@@ -23,7 +23,7 @@ class TestMapPositive:
         result = GlobalDialogInfo(map_module[0]).judge_alert_info()
         assert "创建同级分组成功" == result
 
-    @pytest.mark.skip("跳过")
+    # @pytest.mark.skip("跳过")
     def test_upload_map(self, map_module):
         # 测试在指定地图分组中上传地图
 

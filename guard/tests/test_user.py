@@ -17,12 +17,12 @@ class TestUserPositive:
     @pytest.mark.usefixtures("close_alert")
     def test_create_peer_dep_from_default(self, user):
         # 测试从Default根分组创建同级分组
-        # UserPage(user[0]).create_department_from_Default(user[1])
         GroupTreePage(user[0]).create_peer_or_next_group(user[1])
 
         result = GlobalDialogInfo(user[0]).judge_alert_info()
         assert "创建同级分组成功" == result
 
+    @pytest.mark.skip("跳过")
     @pytest.mark.usefixtures("close_alert", "del_sub_dep_name_to_user")
     def test_create_next_dep_from_user_defined(self, user, sole_group_name):
         # 测试从用户自定义分组创建下一级分组
@@ -31,6 +31,7 @@ class TestUserPositive:
         result = GlobalDialogInfo(user[0]).judge_alert_info()
         assert "创建下一级分组成功" == result
 
+    @pytest.mark.skip("跳过")
     @pytest.mark.usefixtures("close_alert", "del_dep_name_to_user")
     def test_create_peer_dep_from_user_defined(self, user, sole_group_name):
         # 测试从用户自定义分组创建同级分组
@@ -39,6 +40,7 @@ class TestUserPositive:
         result = GlobalDialogInfo(user[0]).judge_alert_info()
         assert "创建同级分组成功" == result
 
+    @pytest.mark.skip("跳过")
     @pytest.mark.usefixtures("close_alert", "del_sub_dep_name_to_default")
     def test_create_next_dep_from_default(self, user, sole_group_name):
         # 测试从Default根分组创建下一级分组

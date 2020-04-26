@@ -71,11 +71,11 @@ def login(start_driver_and_quit):
     # 优化：动态传入测试环境  start_driver_and_quit.get("http://10.151.3.96/login")
     start_driver_and_quit.get(f'http://{env()["host"]}/login')
     # 优化：动态传入登陆用户  LoginPage(start_driver_and_quit).login("zhuwenqin", "888888")
-    LoginPage(start_driver_and_quit).login(f'{env()["username"]}',
-                                           f'{env()["password"]}',
-                                           login_way=env()["login_way"])
     # LoginPage(start_driver_and_quit).login(f'{env()["username"]}',
-    #                                        f'{env()["password"]}')
+    #                                        f'{env()["password"]}',
+    #                                        login_way=env()["login_way"])
+    LoginPage(start_driver_and_quit).login(f'{env()["username"]}',
+                                           f'{env()["password"]}')
     yield start_driver_and_quit
 
 
@@ -173,7 +173,7 @@ def del_sub_dep_name_to_default(user, sole_group_name):
 @pytest.fixture
 def del_dep_name_to_user(user, sole_group_name):
     yield
-    # 删除用户自定义分组
+    # 删除用户自定义分组的同级分组
     GroupTreePage(user[0]).delete_peer_or_next_group_by_name(parent_name=sole_group_name, module_val="user")
     time.sleep(2)
 
