@@ -6,13 +6,19 @@
 
 import pytest
 from guard.pages.device_page import DevicePage
+from guard.pages.components.group_tree import GroupTreePage
+
+from guard.pages.classes.web_global_info import GlobalDialogInfo
 
 
-@pytest.mark.positive
 @pytest.mark.smoke
-def test_create_peer_device_group_from_default(device):
-    # 测试从Default分组创建同级地图分组
-    DevicePage(device[0]).add_map_group_from_Default(device[1]["device_group_name"])
+@pytest.mark.positive
+class TestDevicePositive:
 
-    assert True
+    def test_create_peer_device_group_from_default(self, device):
+        # 测试从Default分组创建同级地图分组
+        GroupTreePage(device[0]).create_peer_or_next_group(device[1]["device_group_name"])
+
+        result = GlobalDialogInfo(device[0]).judge_alert_info()
+        assert "创建同级分组成功" == result
 

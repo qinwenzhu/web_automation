@@ -94,10 +94,11 @@ def setup_device(login):
 """ ---------------------------- 配置-设备管理 ---------------------------- """
 @pytest.fixture(scope="module")
 def device(login):
-    # 进入地图管理模块
+    # 进入设备管理模块
     MenubarPage(login).click_nav_item("配置", "设备管理")
     before_name = {"device_group_name": f"DGN-{uuid4_data()}"}
     yield login, before_name
+    GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["device_group_name"])
 
 
 """ ---------------------------- 配置-地图管理 ---------------------------- """
@@ -134,9 +135,13 @@ def timezone(login):
                    "holiday_name": f"H-{get_current_time()}",
                    "workday_name": f"W-{get_current_time()}"}
     yield login, before_name
-    TimezonePage(login).delete_or_rename_timezone_name(before_name["timezone"])
-    TimezonePage(login).delete_or_rename_holidays_or_workday(before_name["holiday_name"])
-    TimezonePage(login).delete_or_rename_holidays_or_workday(before_name["workday_name"])
+    # 如果创建成功，进行后置数据的处理
+    if TimezonePage(login).assert_result_by_name(before_name["timezone"]):
+        TimezonePage(login).delete_or_rename_timezone_name(before_name["timezone"])
+    if TimezonePage(login).assert_result_by_name(before_name["holiday_name"]):
+        TimezonePage(login).delete_or_rename_holidays_or_workday(before_name["holiday_name"])
+    if TimezonePage(login).assert_result_by_name(before_name["workday_name"]):
+        TimezonePage(login).delete_or_rename_holidays_or_workday(before_name["workday_name"])
 
 
 @pytest.fixture
