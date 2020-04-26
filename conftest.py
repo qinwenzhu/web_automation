@@ -89,13 +89,15 @@ def device(login):
     GroupTreePage(login).create_peer_or_next_group(group_name=before_name["map_group_name"], parent_name="Default")
     MapPage(login).upload_map(file_name=r"{}/map_data/company_4th_floor.jpg".format(SharePath.DATA_FOLDER), group_name=before_name["map_group_name"])
     MenubarPage(login).click_nav_item("配置", "设备管理")
-    # GroupTreePage(login).create_peer_or_next_group(before_name["device_group_name"], parent_name="Default")
     yield login, before_name
     # 删除设备
+
     # 删除设备分组
+    GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["device_group_name"], module_val="device")
+
     # 删除地图分组
-    # MenubarPage(login).click_nav_item("配置", "地图管理")
-    # GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["map_group_name"])
+    MenubarPage(login).click_nav_item("配置", "地图管理")
+    GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["map_group_name"], module_val="map")
 
 
 """ ---------------------------- 配置-地图管理 ---------------------------- """
