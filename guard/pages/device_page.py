@@ -13,8 +13,25 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 class DevicePage(BasePage):
 
-    def add_camera(self, device_name, device_id, device_group_name, map_group_name,
-                   rtsp_address, camera_type="RTSP", device_type="网络摄像机", is_confirm=True):
+    def add_device_com(self):
+        # 点击添加设备
+        ADD_BTN = (By.XPATH, '//span[contains(text(), "添加设备")]')
+        BasePage(self.driver).click_ele(ADD_BTN)
+
+    def is_confirm_or_cancel_com(self, is_confirm=True):
+        if is_confirm:
+            # 定位-确定按钮
+            CONFIRM_BTN = (By.XPATH,
+                           '//div[@class="deviceAdd"]//div[@class="el-dialog__footer"]//span[contains(text(), "确定")]')
+            BasePage(self.driver).click_ele(CONFIRM_BTN)
+        else:
+            # 定位-取消按钮
+            CANCEL_BTN = (
+                By.XPATH, '//div[@class="deviceAdd"]//div[@class="el-dialog__footer"]//span[contains(text(), "取消")]')
+            BasePage(self.driver).click_ele(CANCEL_BTN)
+
+    def add_camera(self, device_type, device_name, device_id, device_group_name, map_group_name,
+                   rtsp_address, camera_type="RTSP", is_confirm=True):
         """
         添加设备,设备类型为 摄像头Cam
         :param device_name: 设备名称
@@ -28,8 +45,7 @@ class DevicePage(BasePage):
         """
 
         # 添加设备
-        ADD_BTN = (By.XPATH, '//span[contains(text(), "添加设备")]')
-        BasePage(self.driver).click_ele(ADD_BTN)
+        self.add_device_com()
 
         # 设置设备类型 - 网络摄像机
         self.select_device_type(device_type)
@@ -39,7 +55,7 @@ class DevicePage(BasePage):
         self.input_device_id(device_id)
         # 设置设备分组名称
         self.select_device_group(device_group_name)
-        # 标注设备在地图上的点位 - 自动化设置，默认位置
+        # 标注设备在地图上的点位 - <前置：需要创建地图分组，上传地图》
         self.select_device_site(map_group_name)
         # TODO 暂时使用默认
         #  设置该设备的使用权限，分配给哪些用户，自动化设置，使用默认值
@@ -49,22 +65,14 @@ class DevicePage(BasePage):
             # 创建摄像机类型为：RTSP 的设备
             self.camera_type_to_rtsp(rtsp_address)
         elif camera_type == "ONVIF":
-            # 创建摄像机类型为：ONVIF  的设备
+            # TODO 创建摄像机类型为：ONVIF  的设备
             pass
 
         # TODO 是否设置该设备 - 关联无感门禁
         # self.is_open_switch(is_relevance)
 
-        if is_confirm:
-            # 定位-确定按钮
-            CONFIRM_BTN = (By.XPATH,
-                           '//div[@class="deviceAdd"]//div[@class="el-dialog__footer"]//span[contains(text(), "确定")]')
-            BasePage(self.driver).click_ele(CONFIRM_BTN)
-        else:
-            # 定位-取消按钮
-            CANCEL_BTN = (
-                By.XPATH, '//div[@class="deviceAdd"]//div[@class="el-dialog__footer"]//span[contains(text(), "取消")]')
-            BasePage(self.driver).click_ele(CANCEL_BTN)
+        # 调用确认or取消
+        self.is_confirm_or_cancel_com(is_confirm)
 
     def camera_type_to_rtsp(self, rtsp_address, camera_type="RTSP", encod_type="直连", tran_pro="TCP"):
         """ 设置摄像机类型为RTSP """
@@ -76,23 +84,6 @@ class DevicePage(BasePage):
         self.select_encoding_type(encod_type)
         # 选择传输协议
         self.select_transport_protocols(tran_pro)
-
-    # def add_map_group_from_Default(self, device_group_name, is_peer=True):
-    #     """
-    #     从Default分组创建同级设备分组
-    #     :param device_group_name: 设备分组名称
-    #     :param is_peer: 判断是否创建同级/下一级分组，默认创建同级分组
-    #     """
-    #     if is_peer:
-    #         # 滑动到创建同级分组
-    #         GroupTreePage(self.driver).click_menu_by_name("Default", "创建同级")
-    #         # 动态定位title 为 创建同级
-    #         GroupTreePage(self.driver).create_dep_group_com(device_group_name, "创建同级")
-    #     else:
-    #         # 滑动到创建下一级分组
-    #         GroupTreePage(self.driver).click_menu_by_name("Default", "创建下一级")
-    #         # 动态定位title 为 创建下一级
-    #         GroupTreePage(self.driver).create_dep_group_com(device_group_name, "创建下一级")
 
     """ ---------------------------- 添加设备 - page界面操作 ---------------------------- """
     # 定位-设备类型

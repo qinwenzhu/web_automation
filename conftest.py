@@ -79,26 +79,23 @@ def login(start_driver_and_quit):
     yield start_driver_and_quit
 
 
-""" ---------------------------- 共用前置数据 ---------------------------- """
-@pytest.fixture(scope="module")
-def setup_device(login):
-    before_name = {"device_group_name": f"DGN-{uuid4_data()}",
-                   "device_name": f"DN-{uuid4_data()}", "device_id": f"{uuid4_data()}"}
-    MenubarPage(login).click_nav_item("配置", "设备管理")
-    DevicePage(login).add_device_group_from_Default(before_name["device_group_name"])
-    time.sleep(3)
-    login.refresh()
-    yield login, before_name
-
-
 """ ---------------------------- 配置-设备管理 ---------------------------- """
 @pytest.fixture(scope="module")
 def device(login):
-    # 进入设备管理模块
+    before_name = {"device_group_name": f"DGN-{uuid4_data()}",
+                   "map_group_name": f"MGN-{uuid4_data()}",
+                   "device_name": f"DN-{uuid4_data()}", "device_id": f"ID-{uuid4_data()}"}
+    MenubarPage(login).click_nav_item("配置", "地图管理")
+    GroupTreePage(login).create_peer_or_next_group(group_name=before_name["map_group_name"], parent_name="Default")
+    MapPage(login).upload_map(file_name=r"{}/map_data/company_4th_floor.jpg".format(SharePath.DATA_FOLDER), group_name=before_name["map_group_name"])
     MenubarPage(login).click_nav_item("配置", "设备管理")
-    before_name = {"device_group_name": f"DGN-{uuid4_data()}"}
+    # GroupTreePage(login).create_peer_or_next_group(before_name["device_group_name"], parent_name="Default")
     yield login, before_name
-    GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["device_group_name"])
+    # 删除设备
+    # 删除设备分组
+    # 删除地图分组
+    # MenubarPage(login).click_nav_item("配置", "地图管理")
+    # GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["map_group_name"])
 
 
 """ ---------------------------- 配置-地图管理 ---------------------------- """

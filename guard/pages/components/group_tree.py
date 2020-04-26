@@ -58,7 +58,7 @@ class GroupTreePage(BasePage):
         :return:
         """
         # 如果是用户模块的删除操作
-        if module_val == "user":
+        if module_val == "user" or module_val == "device":
             # 定位删除按钮
             CONFIRM_BTN = (By.XPATH,
                            '//span[contains(text(),"删除")]/parent::div/following-sibling::div[@class="el-dialog__footer"]//span[contains(text(),"删除")]')
@@ -126,7 +126,7 @@ class GroupTreePage(BasePage):
 
         if is_delete:
             # 点击删除按钮
-            GroupTreePage(self.driver).delete_dep_group_com(module_val=module_val)
+            GroupTreePage(self.driver).delete_dep_group_com(module_val)
         else:
             # 点击取消按钮
-            GroupTreePage(self.driver).delete_dep_group_com(module_val=module_val, is_delete=False)
+            GroupTreePage(self.driver).delete_dep_group_com(module_val, is_delete=False)

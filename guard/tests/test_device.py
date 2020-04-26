@@ -4,6 +4,7 @@
 # @File: test_device.py
 # @Software: PyCharm
 
+import time
 import pytest
 from guard.pages.device_page import DevicePage
 from guard.pages.components.group_tree import GroupTreePage
@@ -21,4 +22,17 @@ class TestDevicePositive:
 
         result = GlobalDialogInfo(device[0]).judge_alert_info()
         assert "创建同级分组成功" == result
+
+    def test_add_device_to_camera(self, device):
+        # DevicePage(device[0]).add_camera(device_name="test", device_id="test1", device_group_name="Default",
+        #                               map_group_name="Default", rtsp_address="rtsp://10.151.3.119:7554/IMG_0322.264")
+        # 等待2秒并刷新页面
+        device[0].refresh()
+        time.sleep(2)
+        DevicePage(device[0]).add_camera(device_type="网络摄像机", device_name=device[1]["device_name"], device_id=device[1]["device_id"],
+                                         device_group_name=device[1]["device_group_name"], map_group_name=device[1]["map_group_name"],
+                                         rtsp_address="rtsp://10.151.3.119:7554/IMG_0322.264", camera_type="RTSP")
+
+        result = GlobalDialogInfo(device[0]).judge_alert_info()
+        assert "添加设备成功" == result
 
