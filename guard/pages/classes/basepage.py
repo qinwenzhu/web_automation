@@ -181,7 +181,7 @@ class BasePage:
         ele = self.get_ele_locator(loc, img_describe)
         self.log.info(f"鼠标移动到指定元素：{img_describe}页面的-{loc[-1]}元素")
         try:
-            ActionChains(self.driver).move_to_element(ele).perform()
+            ActionChains(self.driver).move_to_element(ele).pause(0.2).perform()
         except Exception as e:
             self.save_web_screenshots(img_describe)
             self.log.error(f"鼠标移动到元素失败！")

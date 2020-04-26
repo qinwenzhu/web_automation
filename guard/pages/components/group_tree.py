@@ -11,36 +11,36 @@ from guard.pages.classes.basepage import BasePage
 
 class GroupTreePage(BasePage):
 
-    def click_group_by_name(self, department_name):
+    def click_group_by_name(self, group_name):
         """ 点击左侧树图分组 """
 
         # 部门分组名称
-        DEPARTMENT_NAME = (By.XPATH, f'//div[@title="{department_name}"]')
+        DEPARTMENT_NAME = (By.XPATH, f'//div[@title="{group_name}"]')
         BasePage(self.driver).click_ele(DEPARTMENT_NAME)
 
-    def click_menu_by_name(self, department_name, menu_name):
+    def click_menu_by_name(self, group_name, menu_name):
         """ 滑动到左侧树图右侧icon - 出现列表项 """
 
         # 部门分组右侧icon
-        GROUP_ICON = (By.XPATH, f'//div[@title="{department_name}"]/parent::div/following-sibling::div[contains(text(), "︙")]')
+        GROUP_ICON = (By.XPATH, f'//div[@title="{group_name}"]/parent::div/following-sibling::div[contains(text(), "︙")]')
         BasePage(self.driver).mouse_move_ele(GROUP_ICON)
 
         # 通过传入不同的 menu_name 滑动到不同的操作
         GROUP_MENU_NAME = (By.XPATH, f'//div[@id="menu"]//li[@class="menu" and contains(text(), "{menu_name}")]')
         BasePage(self.driver).mouse_move_ele_and_click(GROUP_ICON, GROUP_MENU_NAME)
 
-    def create_dep_group_com(self, group_name, loc_by_til_name, confirm=True):
+    def create_dep_group_com(self, group_name, loc_by_til_name, is_confirm=True):
         """
         创建 同级/下一级 分组
         :param group_name: 部门组名称
         :param loc_by_til_name: 通过dialog弹框的标题定位唯一元素
-        :param confirm: 判断是点击确定还是点击取消按钮 True默认创建点击确定按钮
+        :param is_confirm: 判断是点击确定还是点击取消按钮 True默认创建点击确定按钮
         """
 
         # 组名称input框
         GROUP_INPUT = (By.XPATH, f'//span[contains(text(),"{loc_by_til_name}")]/parent::div/following-sibling::div[@class="el-dialog__body"]//input')
         BasePage(self.driver).update_input_text(GROUP_INPUT, group_name)
-        if confirm:
+        if is_confirm:
             # 点击确认按钮
             CONFIRM_BTN = (By.XPATH, f'//span[contains(text(),"{loc_by_til_name}")]/parent::div/following-sibling::div[@class="el-dialog__footer"]//span[contains(text(),"确定")]')
             BasePage(self.driver).click_ele(CONFIRM_BTN)
@@ -92,7 +92,7 @@ class GroupTreePage(BasePage):
         RESULT_TEXT = (By.XPATH, f'//div[@role="tree"]//div[contains(@title,"{group_name}")]')
         return BasePage(self.driver).get_text(RESULT_TEXT)
 
-    def create_peer_or_next_group(self, group_name=None, parent_name="Default", is_peer=True):
+    def create_peer_or_next_group(self, group_name=None, parent_name=None, is_peer=True):
         if is_peer:
             # 滑动到创建同级分组
             GroupTreePage(self.driver).click_menu_by_name(parent_name, "创建同级")
@@ -104,14 +104,14 @@ class GroupTreePage(BasePage):
             # 动态定位title 为 创建下一级
             GroupTreePage(self.driver).create_dep_group_com(group_name, "创建下一级")
 
-    def delete_peer_or_next_group_by_name(self, group_name=None, parent_name=None, module_val=None, is_peer=True, delete=True):
+    def delete_peer_or_next_group_by_name(self, group_name=None, parent_name=None, module_val=None, is_peer=True, is_delete=True):
         """
         通过组名称删除分组
         :param group_name: 子级分组
         :param parent_name: 父级分组
         :param module_val: 指定删除操作的模块名 - 由于前端页面元素标签定位不同
         :param is_peer: 判断删除父级/子级分组，默认删除父级
-        :param delete: 判断点击删除还是取消按钮，默认删除
+        :param is_delete: 判断点击删除还是取消按钮，默认删除
         """
         if is_peer:
             GroupTreePage(self.driver).click_group_by_name(parent_name)
@@ -124,7 +124,7 @@ class GroupTreePage(BasePage):
             # 滑动到删除
             GroupTreePage(self.driver).click_menu_by_name(group_name, "删除")
 
-        if delete:
+        if is_delete:
             # 点击删除按钮
             GroupTreePage(self.driver).delete_dep_group_com(module_val=module_val)
         else:

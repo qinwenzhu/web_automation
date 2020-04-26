@@ -17,7 +17,7 @@ class TestUserPositive:
     @pytest.mark.usefixtures("close_alert")
     def test_create_peer_dep_from_default(self, user):
         # 测试从Default根分组创建同级分组
-        GroupTreePage(user[0]).create_peer_or_next_group(user[1])
+        GroupTreePage(user[0]).create_peer_or_next_group(group_name=user[1], parent_name="Default")
 
         result = GlobalDialogInfo(user[0]).judge_alert_info()
         assert "创建同级分组成功" == result
@@ -44,7 +44,7 @@ class TestUserPositive:
     @pytest.mark.usefixtures("close_alert", "del_sub_dep_name_to_default")
     def test_create_next_dep_from_default(self, user, sole_group_name):
         # 测试从Default根分组创建下一级分组
-        GroupTreePage(user[0]).create_peer_or_next_group(sole_group_name, is_peer=False)
+        GroupTreePage(user[0]).create_peer_or_next_group(group_name=sole_group_name, parent_name="Default", is_peer=False)
 
         result = GlobalDialogInfo(user[0]).judge_alert_info()
         assert "创建下一级分组成功" == result
@@ -65,7 +65,7 @@ class TestUserPositive:
 
     @pytest.mark.usefixtures("close_alert")
     def test_delete_peer_dep_from_default(self, user):
-        GroupTreePage(user[0]).delete_peer_or_next_group_by_name(parent_name=user[1])
+        GroupTreePage(user[0]).delete_peer_or_next_group_by_name(parent_name=user[1], module_val="user")
 
         result = GlobalDialogInfo(user[0]).judge_alert_info()
         assert "删除分组成功" == result

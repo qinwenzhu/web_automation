@@ -187,6 +187,7 @@ def del_dep_name_to_user(user, sole_group_name):
 def del_sub_dep_name_to_user(user, sole_group_name):
     yield
     # 删除用户自定义分组的下一级分组
+    time.sleep(10)
     GroupTreePage(user[0]).delete_peer_or_next_group_by_name(group_name=sole_group_name, parent_name=user[1], module_val="user", is_peer=False)
     time.sleep(2)
 
