@@ -24,8 +24,6 @@ class TestDevicePositive:
         assert "创建同级分组成功" == result
 
     def test_add_device_to_camera(self, device):
-        # DevicePage(device[0]).add_camera(device_name="test", device_id="test1", device_group_name="Default",
-        #                               map_group_name="Default", rtsp_address="rtsp://10.151.3.119:7554/IMG_0322.264")
         # 等待2秒并刷新页面
         device[0].refresh()
         time.sleep(2)
