@@ -7,8 +7,8 @@
 import time
 from selenium.webdriver.common.by import By
 from guard.pages.classes.basepage import BasePage
-from guard.pages.components.group_tree import GroupTreePage
 from selenium.webdriver.common.action_chains import ActionChains
+from guard.pages.classes.web_com_content_click import WebContentClick as click_btn
 
 
 class DevicePage(BasePage):
@@ -45,7 +45,7 @@ class DevicePage(BasePage):
         """
 
         # 添加设备
-        self.add_device_com()
+        click_btn(self.driver).click_btn(btn_name="添加设备")
 
         # 设置设备类型 - 网络摄像机
         self.select_device_type(device_type)
@@ -239,9 +239,9 @@ if __name__ == '__main__':
 
     driver = webdriver.Chrome()
     driver.maximize_window()
-    driver.get("http://10.151.5.92/login")
+    driver.get("http://10.151.3.96/login")
     LoginPage(driver).login("zhuwenqin", "888888", login_way="debug")
     MenubarPage(driver).click_nav_item("配置", "设备管理")
-    DevicePage(driver).add_camera(device_name="test", device_id="test1", device_group_name="Default",
+    DevicePage(driver).add_camera(device_type="网络摄像机", device_name="test", device_id="test1", device_group_name="Default",
                                   map_group_name="Default", rtsp_address="rtsp://10.151.3.119:7554/IMG_0322.264")
 

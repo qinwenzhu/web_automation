@@ -31,22 +31,24 @@ class TestMapPositive:
 
         assert MapPage(map_module[0]).judge_upload_map_success()
 
+    @pytest.mark.skip("跳过")
     @pytest.mark.usefixtures("del_sub_map_group_to_default")
     def test_create_next_map_group_suc_from_default(self, map_module, sole_group_name):
         # 测试从Default默认分组创建下一级地图分组
 
-        if not MapPage(map_module[0]).judge_upload_map_success():
+        if MapPage(map_module[0]).judge_upload_map_success() is False:
             # 如果当前分组下不存在地图，则进行创建
             GroupTreePage(map_module[0]).create_peer_or_next_group(group_name=sole_group_name, parent_name="Default",
                                                                    is_peer=False)
             result = GlobalDialogInfo(map_module[0]).judge_alert_info()
             assert "创建下一级分组成功" == result
 
+    @pytest.mark.skip("跳过")
     @pytest.mark.usefixtures("close_next_map_group_tree_dialog")
     def test_create_next_map_group_fail_from_default(self, map_module, sole_group_name):
         # 测试从Default默认分组创建下一级地图分组
 
-        if MapPage(map_module[0]).judge_upload_map_success():
+        if MapPage(map_module[0]).judge_upload_map_success() is True:
             # 需要先判断当前分组是否已经上传地图，如果已经上传地图，则断言该用例
             GroupTreePage(map_module[0]).create_peer_or_next_group(group_name=sole_group_name, parent_name="Default",
                                                                is_peer=False)

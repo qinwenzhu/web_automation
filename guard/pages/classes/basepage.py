@@ -132,6 +132,16 @@ class BasePage:
             self.log.error(f"文本输入失败！")
             raise e
 
+    def clear_input_default_val(self, loc, img_describe="current"):
+        ele = self.get_ele_locator(loc, img_describe)
+        self.log.info(f"清空文本框默认值：{img_describe}页面的{loc}元素")
+        try:
+            ele.clear()
+        except Exception as e:
+            self.save_web_screenshots(img_describe)
+            self.log.error(f"清空文本失败！")
+            raise e
+
     def upload_file(self, loc, filename=None, upload_way="input", browser_type="chrome", img_describe="current"):
         """
         文件上传
