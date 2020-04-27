@@ -135,7 +135,7 @@ class TaskPage(BasePage):
         REGION = (By.XPATH, '//div[@class="addTaskPC-video"]')
         BasePage(self.driver).scroll_visibility_region(loc=REGION)
 
-        time.sleep(10)
+        time.sleep(3)
 
         # 绘制违停区域
         # PARK_REGION = (By.XPATH, '//canvas[@class="draw-line"]')
@@ -143,20 +143,39 @@ class TaskPage(BasePage):
         ele = BasePage(self.driver).get_ele_locator(PARK_REGION)
         # self.draw_line()
 
-        from selenium.webdriver.common.action_chains import ActionChains
-        alarm_line = [(-100, -100), (100, -100), (100, 100), (-100, 100), (-100, -100)]
-        for point in alarm_line:
-            ActionChains(self.driver).move_to_element(ele).pause(3).move_by_offset(xoffset=point[0], yoffset=point[1]).pause(3).click(ele).perform()
-
-
-
-
-        # 移动到视频绘制区域
-        # BasePage(self.driver).mouse_move_ele_and_click(REGION_BTN, REGION)
-
-        # 进行区域绘制
         # from selenium.webdriver.common.action_chains import ActionChains
-        # ActionChains(self.driver).move_to_element(ele).pause(2).move_by_offset(xoffset=100, yoffset=100)
+        alarm_line = [(-100, -100), (100, -100), (100, 100), (-100, 100), (-100, -100)]
+        # ActionChains(self.driver).move_to_element(ele).move_by_offset(xoffset=10, yoffset=-10).pause(3).click(ele).perform()
+        # ActionChains(self.driver).move_to_element(ele).move_by_offset(xoffset=100, yoffset=-10).pause(3).click(ele).perform()
+        # ActionChains(self.driver).move_to_element(ele).move_by_offset(xoffset=100, yoffset=-100).pause(3).click(ele).perform()
+        # ActionChains(self.driver).move_to_element(ele).move_by_offset(xoffset=10, yoffset=--100).pause(3).click(ele).perform()
+        # actions = ActionChains(self.driver)
+        for point in alarm_line:
+            self.mouse_ele_and_set_offset(ele, point[0], point[1])
+            # actions.move_to_element(ele).pause(2).perform()
+            # actions.move_by_offset(xoffset=point[0], yoffset=point[1]).pause(3).perform()
+            # actions.click(ele).perform()
+
+        # 点击确定
+        CONFIRM_BTN = (By.XPATH, '//div[@aria-label="添加任务"]//div[@class="el-dialog__footer"]//span[contains(text(), "确定")]')
+        BasePage(self.driver).click_ele(CONFIRM_BTN)
+
+
+    def mouse_ele_and_set_offset(self, ele, x_offset, y_offset):
+        """ 进行区域绘制 """
+        from selenium.webdriver.common.action_chains import ActionChains
+        actions = ActionChains(self.driver)
+        actions.move_to_element(ele)
+        actions.perform()
+        # time.sleep(1)
+        actions.pause(1)
+        actions.move_by_offset(x_offset, y_offset)
+        actions.perform()
+        # time.sleep(1)
+        actions.pause(1)
+        actions.click()
+        actions.perform()
+
 
     """ ---------------------------- 页面共用封装方法 ---------------------------- """
     def comm_search_result_by_name(self, name):
