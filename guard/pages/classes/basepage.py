@@ -186,34 +186,55 @@ class BasePage:
 
     def mouse_move_ele(self, loc, img_describe="current"):
         """  鼠标移动到指定元素上 """
-
         self.wait_for_ele_to_be_visible(loc, img_describe)
         ele = self.get_ele_locator(loc, img_describe)
+        actions = ActionChains(self.driver)
         self.log.info(f"鼠标移动到指定元素：{img_describe}页面的-{loc[-1]}元素")
         try:
-            ActionChains(self.driver).move_to_element(ele).pause(0.2).perform()
+            # 虽然可以想JQuery一样采用链式操作，但是有时候会导致元素操作失败
+            actions.move_to_element(ele).perform()
         except Exception as e:
             self.save_web_screenshots(img_describe)
             self.log.error(f"鼠标移动到元素失败！")
             raise e
-        else:
-            return ele
 
     def mouse_move_ele_and_click(self, loc1, loc2, pause_time=2, img_describe="current"):
         """  鼠标移动到指定元素上并进行列表的点击操作 """
 
+        # 等待滑动到目标元素可见
         self.wait_for_ele_to_be_visible(loc1, img_describe)
-        # 滑动到父元素
         ele = self.get_ele_locator(loc1, img_describe)
+        # 等待需要操作的元素可见
         self.wait_for_ele_to_be_visible(loc2, img_describe)
-        # 操作列表中的子元素
         sub_ele = self.get_ele_locator(loc2, img_describe)
+        actions = ActionChains(self.driver)
         self.log.info(f"{img_describe}页面：鼠标移动到父级元素{loc1[-1]},操作子元素{loc2[-1]}元素")
         try:
-            ActionChains(self.driver).move_to_element(ele).pause(pause_time).click(sub_ele).perform()
+            actions.move_to_element(ele).perform()
+            actions.pause(pause_time)
+            actions.click(sub_ele).perform()
         except Exception as e:
             self.save_web_screenshots(img_describe)
             self.log.error(f"鼠标移动到元素点击元素失败！")
+            raise e
+
+    def mouse_move_ele_and_offset(self, x_offset, y_offset, loc=None, ele=None, pause_time=2, img_describe="current"):
+        """ 鼠标在指定元素上的移动的x和y的坐标位移 """
+
+        actions = ActionChains(self.driver)
+        try:
+            if loc is not None:
+                # 等待滑动到目标元素可见
+                ele = self.get_ele_locator(loc, img_describe)
+                self.log.info(f"{img_describe}页面：鼠标移动到x,y轴的位移，操作元素为：{loc}, x轴移动坐标：{x_offset}, y轴移动坐标：{y_offset}")
+            actions.move_to_element(ele).perform()
+            actions.pause(pause_time)
+            actions.move_by_offset(x_offset, y_offset).perform()
+            actions.pause(pause_time)
+            actions.click().perform()
+        except Exception as e:
+            self.save_web_screenshots(img_describe)
+            self.log.error("鼠标操作元素在x、y轴移动失败！")
             raise e
 
     def scroll_visibility_region(self, ele=None, loc=None, img_describe="current"):
@@ -227,6 +248,7 @@ class BasePage:
             if ele is not None:
                 self.driver.execute_script("arguments[0].scrollIntoView();", ele)
             elif loc is not None:
+                self.wait_for_ele_to_be_presence(loc)
                 element = self.get_ele_locator(loc)
                 self.driver.execute_script("arguments[0].scrollIntoView();", element)
         except Exception as e:
