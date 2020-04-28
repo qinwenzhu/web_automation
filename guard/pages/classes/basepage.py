@@ -59,7 +59,7 @@ class BasePage:
     def wait_for_ele_to_be_presence(self, loc, img_describe="current", timeout=10, poll_frequency=0.5):
         """ 等待元素在页面中存在"""
 
-        self.log.info(f"等待元素存在：{img_describe}页面的-{loc[-1]}元素")
+        self.log.info(f"等待元素存在：{img_describe}页面的-{loc}元素")
         try:
             WebDriverWait(self.driver, timeout, poll_frequency).until(EC.presence_of_element_located(loc))
         except TimeoutError as e:
@@ -81,7 +81,7 @@ class BasePage:
     def get_ele_locator(self, loc, img_describe="current"):
         """ 获取元素 """
 
-        self.log.info(f"获取元素定位：{img_describe}页面的{loc[-1]}元素")
+        self.log.info(f"获取元素定位：{img_describe}页面的{loc}元素")
         try:
             ele = self.driver.find_element(*loc)
         except Exception as e:
@@ -91,12 +91,25 @@ class BasePage:
         else:
             return ele
 
+    def get_ele_locator_by_index(self, loc, index, img_describe="current"):
+        """ 页面定位表达式能匹配到多个，通过下标访问 """
+
+        self.log.info(f"页面表达式匹配多个元素，通过下标获取指定元素定位：{img_describe}页面的{loc}元素")
+        try:
+            ele = self.driver.find_elements(*loc)
+        except Exception as e:
+            self.save_web_screenshots(img_describe)
+            self.log.error(f"元素定位失败！")
+            raise e
+        else:
+            return ele[index]
+
     def get_text(self, loc, img_describe="current"):
         """ 获取元素的文本内容  前提：元素存在 """
 
         self.wait_for_ele_to_be_presence(loc, img_describe)
         ele = self.get_ele_locator(loc, img_describe)
-        self.log.info(f"获取元素文本：{img_describe}页面的{loc[-1]}元素")
+        self.log.info(f"获取元素文本：{img_describe}页面的{loc}元素")
         try:
             return ele.text
         except Exception as e:
@@ -109,7 +122,7 @@ class BasePage:
 
         self.wait_for_ele_to_be_presence(loc, img_describe)
         ele = self.get_ele_locator(loc, img_describe)
-        self.log.info(f"获取元素属性：{img_describe}页面的{loc[-1]}元素")
+        self.log.info(f"获取元素属性：{img_describe}页面的{loc}元素")
         try:
             attr_val = ele.get_attribute(attr)
         except Exception as e:
@@ -124,7 +137,7 @@ class BasePage:
 
         self.wait_for_ele_to_be_visible(loc, img_describe)
         ele = self.get_ele_locator(loc, img_describe)
-        self.log.info(f"文本框输入文本：{img_describe}页面的{loc[-1]}元素")
+        self.log.info(f"文本框输入文本：{img_describe}页面的{loc}元素")
         try:
             ele.send_keys(val)
         except Exception as e:
@@ -171,10 +184,10 @@ class BasePage:
                 self.log.error("wiin窗口，文件上传失败！")
                 raise e
 
-    def click_ele(self, loc, img_describe="current"):
+    def click_ele(self, loc, timeout=10, img_describe="current"):
         """ 点击元素，等待元素可见进行点击"""
 
-        self.wait_for_ele_to_be_visible(loc)
+        self.wait_for_ele_to_be_visible(loc, timeout)
         ele = self.get_ele_locator(loc)
         self.log.info(f"点击元素：{img_describe}页面的-{loc[-1]}元素")
         try:

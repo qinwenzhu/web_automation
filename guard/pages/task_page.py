@@ -17,7 +17,7 @@ class TaskPage(BasePage):
         TASK_MENU = (By.XPATH, f'//div[@class="task-menu-container"]//li[contains(text(), "{menu_name}")]')
         BasePage(self.driver).click_ele(TASK_MENU)
 
-    def add_task_to_parked_vehicle(self, task_name, device_name, time_minute, timezone_name=None, attr_name=None, param_collection=[], menu_name="车辆-违停检测任务", is_confirm=True):
+    def add_task_to_parked_vehicle(self, task_name, device_name, time_minute, timezone_name=None, attr_name=None, menu_name="车辆-违停检测任务", is_confirm=True):
         """
         添加车辆违停任务
         :param task_name: 任务名称
@@ -26,7 +26,7 @@ class TaskPage(BasePage):
         :param timezone_name: 时间条件名称
         :param attr_name: 特殊属性
         :param menu_name: 任务类型
-        :return:
+        :param is_confirm: 是否添加任务，默认添加
         """
         # 点击左侧菜单
         self.click_left_menu(menu_name)
@@ -41,7 +41,7 @@ class TaskPage(BasePage):
         self.input_park_time(time_minute)
         self.com_car_size("最小车辆识别尺寸", width=30, height=30)
         self.com_car_size("最大车辆识别尺寸", width=500, height=500)
-        self.draw_park_region(draw_param=param_collection)
+        self.draw_park_region()
 
         if is_confirm:
             # 点击确定
@@ -77,8 +77,10 @@ class TaskPage(BasePage):
 
     # 定位-设备，为指定设备绑定任务
     def select_device(self, device_name):
+
         DEVICE = (By.XPATH, '//label[contains(text(), "设备")]/following-sibling::div//div[contains(@class, "el-popover__reference")]//input')
         BasePage(self.driver).click_ele(DEVICE)
+
         # 通过设备名搜索设备并选择
         self.comm_search_result_by_name(device_name)
 
@@ -161,7 +163,7 @@ class TaskPage(BasePage):
     # 定位-绘制违停区域
 
     # 定位-区域绘制
-    def draw_park_region(self, draw_param: list):
+    def draw_park_region(self):
         # 定位点击绘制区域的按钮
         REGION_BTN = (By.XPATH, '//i/parent::div[contains(text(), "点击绘制区域 ")]')
         BasePage(self.driver).click_ele(REGION_BTN)
@@ -172,7 +174,8 @@ class TaskPage(BasePage):
         # 绘制违停区域
         PARK_REGION = (By.CSS_SELECTOR, '.draw-line')
 
-        # draw_param = [(-100, -100), (100, -100), (100, 100), (-100, 100), (-100, -100)]    参数形式
+        # 参数形式
+        draw_param = [(-100, -100), (100, -100), (100, 100), (-100, 100), (-100, -100)]
         for point in draw_param:
             BasePage(self.driver).mouse_move_ele_and_offset(point[0], point[1], loc=PARK_REGION)
 
@@ -187,7 +190,7 @@ class TaskPage(BasePage):
         # 2、通过设备名device_name, 定位到查询结果
         RESULT = (By.XPATH, f'//span[@class="el-radio__label"]//span[@title="{name}"]')
         # 点击到查询的设备分组名
-        BasePage(self.driver).click_ele(RESULT)
+        BasePage(self.driver).click_ele(RESULT, timeout=20)
 
 
 if __name__ == '__main__':
@@ -200,4 +203,4 @@ if __name__ == '__main__':
     driver.get("http://10.151.3.96/login")
     LoginPage(driver).login("zhuwenqin", "888888", login_way="debug")
     MenubarPage(driver).click_nav_item("配置", "任务管理")
-    TaskPage(driver).add_task_to_parked_vehicle(task_name="test", device_name="ddd", time_minute=1, param_collection=[(-100, -100), (100, -100), (100, 100), (-100, 100), (-100, -100)])
+    TaskPage(driver).add_task_to_parked_vehicle(task_name="test", device_name="name-ac12eeee-38aa-4091-af81-01126f1ad02", time_minute=1)

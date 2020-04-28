@@ -6,6 +6,7 @@
 
 import time
 import uuid
+import random
 
 import pytest
 from selenium import webdriver
@@ -83,28 +84,31 @@ def login(start_driver_and_quit):
 @pytest.fixture(scope="module")
 def task(login):
     before_name = {"map_group_name": f"MGN-{uuid4_data()}", "device_group_name": f"DGN-{uuid4_data()}",
-                   "device_name": f"name-{uuid4_data()}", "device_id": f"id-{uuid4_data()}"}
+                   "device_name": f"name-{get_current_time()}", "device_id": f"id-{get_current_time()}",
+                   "task_name": f"id-{uuid4_data()}", "time_minute": integer_num()}
     MenubarPage(login).click_nav_item("配置", "地图管理")
     GroupTreePage(login).create_peer_or_next_group(group_name=before_name["map_group_name"], parent_name="Default")
     MapPage(login).upload_map(file_name=r"{}/map_data/company_4th_floor.jpg".format(SharePath.DATA_FOLDER), group_name=before_name["map_group_name"])
     # 进入设备模块，创建设备分组，不同设备类型的设备
+    time.sleep(2)
     MenubarPage(login).click_nav_item("配置", "设备管理")
+    time.sleep(2)
     GroupTreePage(login).create_peer_or_next_group(group_name=before_name["device_group_name"], parent_name="Default")
     # 添加设备类型为：网络摄像机、相机类型为：RTSP 的设备
-    # DevicePage(login).add_camera(
-    #     device_type="网络摄像机", device_name=device[1]["device_name"], device_id=device[1]["device_id"],
-    #     device_group_name=device[1]["device_group_name"], map_group_name=device[1]["map_group_name"],
-    #     rtsp_address="rtsp://10.151.3.119:7554/IMG_0322.264", camera_type="RTSP"
-    # )
+    time.sleep(2)
+    DevicePage(login).add_camera(device_type="网络摄像机", device_name=before_name["device_name"], device_id=before_name["device_id"],
+                                device_group_name=before_name["device_group_name"], map_group_name=before_name["map_group_name"],
+                                rtsp_address="rtsp://10.151.3.119:7554/IMG_0322.264", camera_type="RTSP")
+    time.sleep(2)
+    MenubarPage(login).click_nav_item("配置", "任务管理")
     yield login, before_name
-    # 删除设备
-
+    # 删除任务
     # 删除设备分组
-    GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["device_group_name"], module_val="device")
-
-    # 删除地图分组
-    MenubarPage(login).click_nav_item("配置", "地图管理")
-    GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["map_group_name"], module_val="map")
+    # MenubarPage(login).click_nav_item("配置", "设备管理")
+    # GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["device_group_name"], module_val="device")
+    # # 删除地图分组
+    # MenubarPage(login).click_nav_item("配置", "地图管理")
+    # GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["map_group_name"], module_val="map")
 
 
 """ ---------------------------- 配置-设备管理 ---------------------------- """
@@ -119,7 +123,6 @@ def device(login):
     MenubarPage(login).click_nav_item("配置", "设备管理")
     yield login, before_name
     # 删除设备
-
     # 删除设备分组
     GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["device_group_name"], module_val="device")
     # 删除地图分组
@@ -261,6 +264,11 @@ def get_current_time():
 def uuid4_data():
     # 生成随机数据
     return str(uuid.uuid4())
+
+
+def integer_num():
+    # 生成指定范围内的整数
+    return random.randint(1, 60)
 
 
 @pytest.fixture

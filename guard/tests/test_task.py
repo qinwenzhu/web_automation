@@ -6,3 +6,21 @@
 # @software: PyCharm
 
 # 如果连续创建两次相同的任务，则前端提示语为：该设备已存在该类型任务，并点击取消按钮
+
+import time
+from guard.pages.task_page import TaskPage
+from guard.pages.components.table_list import TableListPage
+
+
+class TestTaskPositive:
+
+    def test_add_vehicle_illegally_parking_detection_task(self, task):
+        # 测试添加-车辆违停任务
+        TaskPage(task[0]).add_task_to_parked_vehicle(task_name=task[1]["task_name"], device_name=task[1]["device_name"],
+                                                     time_minute=task[1]["time_minute"], timezone_name=None, attr_name=None)
+        time.sleep(2)
+        assert TableListPage(task[0]).judge_table_list_name(task[1]["task_name"])
+
+    def test_delete_vehicle_illegally_parking_detection_task(self, task):
+        # 测试删除-车辆违停任务
+        TableListPage(task[0]).operations_table_list(name=task[1]["task_name"], flag="delete")
