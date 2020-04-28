@@ -84,8 +84,8 @@ def login(start_driver_and_quit):
 @pytest.fixture(scope="module")
 def task(login):
     before_name = {"map_group_name": f"MGN-{uuid4_data()}", "device_group_name": f"DGN-{uuid4_data()}",
-                   "device_name": f"device_name-{get_current_time()}", "device_id": f"id-{get_current_time()}",
-                   "task_name": f"task_name-{uuid4_data()}", "time_minute": integer_num()}
+                   "device_name": f"dname-{get_current_time()}", "device_id": f"id-{get_current_time()}",
+                   "task_name": f"tname-{uuid4_data()}", "time_minute": integer_num()}
     MenubarPage(login).click_nav_item("配置", "地图管理")
     GroupTreePage(login).create_peer_or_next_group(group_name=before_name["map_group_name"], parent_name="Default")
     MapPage(login).upload_map(file_name=r"{}/map_data/company_4th_floor.jpg".format(SharePath.DATA_FOLDER), group_name=before_name["map_group_name"])

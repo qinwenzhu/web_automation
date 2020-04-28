@@ -4,6 +4,7 @@
 # @File: table_list.py
 # @Software: PyCharm
 
+import time
 from selenium.webdriver.common.by import By
 from guard.pages.classes.basepage import BasePage
 from guard.pages.classes.web_global_dialog import GlobalDialog
@@ -29,6 +30,7 @@ class TableListPage(BasePage):
         DELETE_ICON = (By.XPATH, f'//table[@class="el-table__body"]//div[@class="cell" and  text() = "{name}"]/parent::td/following-sibling::td[contains(@class, "tables-operate")]//i[contains(@class, "icon-delete")]')
 
         # 点击查看、 编辑、删除icon
+        time.sleep(2)
         if flag == "view":
             BasePage(self.driver).click_ele(VIEW_ICON)
 
@@ -42,8 +44,6 @@ class TableListPage(BasePage):
             pass
 
         elif flag == "delete":
-            import time
-            time.sleep(2)
             BasePage(self.driver).click_ele(DELETE_ICON)
             # 进行弹框删除操作
             self.table_list_delete()

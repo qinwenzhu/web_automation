@@ -216,9 +216,8 @@ if __name__ == '__main__':
     driver.get("http://10.151.3.96/login")
     LoginPage(driver).login("zhuwenqin", "888888", login_way="debug")
     MenubarPage(driver).click_nav_item("配置", "任务管理")
-    # TaskPage(driver).add_task_to_parked_vehicle(task_name="test", device_name="1111", time_minute=1)
+    TaskPage(driver).add_task_to_parked_vehicle(task_name="test", device_name="1111", time_minute=1)
 
-    from guard.pages.components.table_list import TableListPage
-
-    TaskPage(driver).click_left_menu("车辆-违停检测任务")
-    TableListPage(driver).operations_table_list(name="id-2b244f07-cb55-47e7-87ef-3dca9ca47593", flag="delete")
+    # from guard.pages.components.table_list import TableListPage
+    # TaskPage(driver).click_left_menu("车辆-违停检测任务")
+    # TableListPage(driver).operations_table_list(name="id-2b244f07-cb55-47e7-87ef-3dca9ca47593", flag="delete")
