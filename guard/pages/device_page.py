@@ -7,7 +7,7 @@
 import time
 from selenium.webdriver.common.by import By
 from guard.pages.classes.basepage import BasePage
-from selenium.webdriver.common.action_chains import ActionChains
+# from selenium.webdriver.common.action_chains import ActionChains
 from guard.pages.classes.web_com_content_click import WebContentClick as click_btn
 
 
@@ -60,17 +60,14 @@ class DevicePage(BasePage):
         # TODO 暂时使用默认
         #  设置该设备的使用权限，分配给哪些用户，自动化设置，使用默认值
         # self.assign_device_jurisdiction_to_user()
-
         if camera_type == "RTSP":
             # 创建摄像机类型为：RTSP 的设备
             self.camera_type_to_rtsp(rtsp_address)
         elif camera_type == "ONVIF":
             # TODO 创建摄像机类型为：ONVIF  的设备
             pass
-
         # TODO 是否设置该设备 - 关联无感门禁
         # self.is_open_switch(is_relevance)
-
         # 调用确认or取消
         self.is_confirm_or_cancel_com(is_confirm)
 
@@ -91,6 +88,7 @@ class DevicePage(BasePage):
         # 定位设备类型框 并点击
         TYPE = (By.XPATH, '//label[contains(text(), "设备类型")]/following-sibling::div//input')
         BasePage(self.driver).click_ele(TYPE)
+
         time.sleep(0.2)
         # 通过传入的不同设备类型 - 去动态定位设备类型
         SELECT_TYPE = (By.XPATH, f'//div[contains(@class,"el-popper") and contains(@style, "position")]//ul[contains(@class, "el-select-dropdown__list")]//span[contains(text(), "{default}")]')
@@ -115,16 +113,8 @@ class DevicePage(BasePage):
         time.sleep(0.2)
         BasePage(self.driver).click_ele(GROUP)
 
-        """ 选择设备分组 """
+        # 选择设备分组
         self.comm_search_result_by_name(device_group_name)
-        # # 1、通过设备分组名device_group_name,查找设备
-        # SELECT_GROUP = (By.XPATH, '//div[@role="tooltip" and contains(@style, "position")]//div[contains(@class, "el-input--small")]//input')
-        # BasePage(self.driver).update_input_text(SELECT_GROUP, device_group_name)
-        #
-        # # 2、通过设备分组名device_group_name, 定位到查询结果
-        # RESULT = (By.XPATH, f'//span[@class="el-radio__label" and text() = "{device_group_name}"]')
-        # # 点击到查询的设备分组名
-        # BasePage(self.driver).click_ele(RESULT)
         if is_confirm:
             # 点击确定
             CONFIRM_BTN = (
@@ -157,9 +147,7 @@ class DevicePage(BasePage):
 
         # 定位 - 地图容器
         TARGET_ELE = (By.XPATH, '//div[@class="leaflet-control-container"]')
-        target_ele = BasePage(self.driver).get_ele_locator(TARGET_ELE)
-        # 从地图点位 移动到 目标点位的指定x和y的位置
-        ActionChains(self.driver).move_to_element(move_ele).pause(pause_time).move_by_offset(300, 300).pause(pause_time).click(target_ele).perform()
+        BasePage(self.driver).mouse_move_to_ele_and_offset(100, 100, loc=TARGET_ELE)
 
         if is_confirm:
             # 点击确定

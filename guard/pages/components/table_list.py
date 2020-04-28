@@ -42,6 +42,8 @@ class TableListPage(BasePage):
             pass
 
         elif flag == "delete":
+            import time
+            time.sleep(2)
             BasePage(self.driver).click_ele(DELETE_ICON)
             # 进行弹框删除操作
             self.table_list_delete()
@@ -51,11 +53,11 @@ class TableListPage(BasePage):
         if is_delete:
             # 点击删除按钮
             CONFIRM_BTN = (By.XPATH, '//button//span[text()="删除"]')
-            ele = BasePage(self.driver).get_ele_locator_by_index(CONFIRM_BTN, 2)
+            ele = BasePage(self.driver).get_ele_locator_by_index(CONFIRM_BTN, 1)
             ele.click()
         else:
             # 点击取消按钮
             CONFIRM_BTN = (By.XPATH, '//button//span[text()="取消"]')
-            ele = BasePage(self.driver).get_ele_locator_by_index(CONFIRM_BTN, 2)
+            ele = BasePage(self.driver).get_ele_locator_by_index(CONFIRM_BTN, 1)
             ele.click()
 

@@ -4,7 +4,10 @@
 # @File: menubar.py
 # @Software: PyCharm
 
+
+import time
 from selenium.webdriver.common.by import By
+from guard.pages.classes.web_global_info import GlobalDialogInfo
 from guard.pages.classes.basepage import BasePage
 
 
@@ -17,6 +20,17 @@ class MenubarPage(BasePage):
         :param sub_menu_text: 子菜单文本
         :return:
         """
+
+        # 当推送消息过多，系统会弹出消息提示，但是会挡住nav导航条，所以需要在定位元素之前进行判断和关闭
+        INFO_TEXT = (By.XPATH, '//div[@role="alert"]//p')
+        try:
+            self.driver.find_element(*INFO_TEXT)
+        except:
+            # 异常不抛出，直接处理下方代码
+            pass
+        else:
+            GlobalDialogInfo(self.driver).close_alert()
+            time.sleep(0.2)
 
         if menu_text == "工具":
             MENU_TEXT = (By.XPATH, f'//div[text()="{menu_text}"]')
@@ -37,7 +51,6 @@ class MenubarPage(BasePage):
 if __name__ == '__main__':
     from selenium import webdriver
     from guard.pages.login_page import LoginPage
-    import time
     driver = webdriver.Chrome()
     driver.get("http://10.151.3.96/login")
     LoginPage(driver).login("zhuwenqin", "888888", login_way="ssh")

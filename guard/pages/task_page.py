@@ -7,6 +7,7 @@
 import time
 from selenium.webdriver.common.by import By
 from guard.pages.classes.basepage import BasePage
+from selenium.webdriver.common.action_chains import ActionChains
 from guard.pages.classes.web_com_content_click import WebContentClick as click_btn
 
 
@@ -169,15 +170,16 @@ class TaskPage(BasePage):
         BasePage(self.driver).click_ele(REGION_BTN)
         # 滚动到视频违停区域
         VIEW_REGION = (By.XPATH, '//div[@class="addTaskPC-video"]')
-        time.sleep(2)
         BasePage(self.driver).scroll_visibility_region(loc=VIEW_REGION)
+        time.sleep(2)
         # 绘制违停区域
         PARK_REGION = (By.CSS_SELECTOR, '.draw-line')
+        ele = BasePage(self.driver).get_ele_locator(PARK_REGION)
 
         # 参数形式
         draw_param = [(-100, -100), (100, -100), (100, 100), (-100, 100), (-100, -100)]
         for point in draw_param:
-            BasePage(self.driver).mouse_move_ele_and_offset(point[0], point[1], loc=PARK_REGION)
+            self.draw_line(point[0], point[1], ele)
 
     """ ---------------------------- 页面共用封装方法 ---------------------------- """
     def comm_search_result_by_name(self, name):
@@ -192,6 +194,17 @@ class TaskPage(BasePage):
         # 点击到查询的设备分组名
         BasePage(self.driver).click_ele(RESULT, timeout=20)
 
+    def draw_line(self, x_offset, y_offset, ele):
+        actions = ActionChains(self.driver)
+        actions.move_to_element(ele)
+        actions.perform()
+        actions.pause(1)
+        actions.move_by_offset(x_offset, y_offset)
+        actions.perform()
+        actions.pause(1)
+        actions.click()
+        actions.perform()
+
 
 if __name__ == '__main__':
     from selenium import webdriver
@@ -203,4 +216,9 @@ if __name__ == '__main__':
     driver.get("http://10.151.3.96/login")
     LoginPage(driver).login("zhuwenqin", "888888", login_way="debug")
     MenubarPage(driver).click_nav_item("配置", "任务管理")
-    TaskPage(driver).add_task_to_parked_vehicle(task_name="test", device_name="name-ac12eeee-38aa-4091-af81-01126f1ad02", time_minute=1)
+    # TaskPage(driver).add_task_to_parked_vehicle(task_name="test", device_name="1111", time_minute=1)
+
+    from guard.pages.components.table_list import TableListPage
+
+    TaskPage(driver).click_left_menu("车辆-违停检测任务")
+    TableListPage(driver).operations_table_list(name="id-2b244f07-cb55-47e7-87ef-3dca9ca47593", flag="delete")
