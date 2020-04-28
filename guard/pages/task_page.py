@@ -17,7 +17,7 @@ class TaskPage(BasePage):
         TASK_MENU = (By.XPATH, f'//div[@class="task-menu-container"]//li[contains(text(), "{menu_name}")]')
         BasePage(self.driver).click_ele(TASK_MENU)
 
-    def add_task_to_parked_vehicle(self, task_name, device_name, time_minute, timezone_name=None, attr_name=None, param_collection=[], menu_name="车辆-违停检测任务"):
+    def add_task_to_parked_vehicle(self, task_name, device_name, time_minute, timezone_name=None, attr_name=None, param_collection=[], menu_name="车辆-违停检测任务", is_confirm=True):
         """
         添加车辆违停任务
         :param task_name: 任务名称
@@ -28,27 +28,37 @@ class TaskPage(BasePage):
         :param menu_name: 任务类型
         :return:
         """
-
         # 点击左侧菜单
         self.click_left_menu(menu_name)
-
         # 点击添加任务
         click_btn(self.driver).click_btn(btn_name="添加任务")
-
         # 基础配置
         self.select_task_type(menu_name)
         self.input_task_name(task_name)
         self.select_device(device_name)
-        # self.select_timezone(timezone_name)
-        # self.select_special_attr(attr_name)
+        self.select_timezone(timezone_name)
+        self.select_special_attr(attr_name)
         self.input_park_time(time_minute)
-        # self.com_car_size("最小车辆识别尺寸")
-        # self.com_car_size("最大车辆识别尺寸")
+        self.com_car_size("最小车辆识别尺寸", width=30, height=30)
+        self.com_car_size("最大车辆识别尺寸", width=500, height=500)
         self.draw_park_region(draw_param=param_collection)
 
-        # 点击确定
-        CONFIRM_BTN = (By.XPATH, '//div[@aria-label="添加任务"]//div[@class="el-dialog__footer"]//span[contains(text(), "确定")]')
-        BasePage(self.driver).click_ele(CONFIRM_BTN)
+        if is_confirm:
+            # 点击确定
+            self.com_confirm_or_cancel(is_confirm=is_confirm)
+        else:
+            # 点击取消
+            self.com_confirm_or_cancel(is_confirm=is_confirm)
+
+    def com_confirm_or_cancel(self, til_name="添加任务", is_confirm=True):
+        if is_confirm:
+            # 点击确定
+            CONFIRM_BTN = (By.XPATH, f'//div[@aria-label="{til_name}"]//div[@class="el-dialog__footer"]//span[contains(text(), "确定")]')
+            BasePage(self.driver).click_ele(CONFIRM_BTN)
+        else:
+            # 点击取消
+            CANCEL_BTN = (By.XPATH, f'//div[@aria-label="{til_name}"]//div[@class="el-dialog__footer"]//span[contains(text(), "取消")]')
+            BasePage(self.driver).click_ele(CANCEL_BTN)
 
     # 定位-任务类型
     def select_task_type(self, task_type):
@@ -73,28 +83,39 @@ class TaskPage(BasePage):
         self.comm_search_result_by_name(device_name)
 
     # 定位-时间条件
-    def select_timezone(self, timezone_name=None):
+    def select_timezone(self, timezone_name):
         """
         选择时间条件名
         :param timezone_name: 通过设置好的timezone名，选择对应的时间条件
         """
+        # 定位时间条件选择框
         TIMEZONE = (By.XPATH, '//label[contains(text(), "时间条件")]/following-sibling::div//input')
         BasePage(self.driver).click_ele(TIMEZONE)
-        # 通过timezone的名称，定位时间条件
-        SELECT_TIMEZONE = (By.XPATH, f'//span[text()="{timezone_name}"]')
-        # 移动到时间条件上并进行选择时间条件
-        BasePage(self.driver).mouse_move_ele_and_click(TIMEZONE, SELECT_TIMEZONE)
+        if timezone_name is not None:
+            # 如果时间条件不为空，则进行时间条件的选择
+
+            # 通过timezone的名称，定位时间条件
+            SELECT_TIMEZONE = (By.XPATH, f'//span[text()="{timezone_name}"]')
+            BasePage(self.driver).mouse_move_ele_and_click(TIMEZONE, SELECT_TIMEZONE)
+        else:
+            # 否则直接点击选择框，不进行选择
+            BasePage(self.driver).click_ele(TIMEZONE)
 
     # 定位-特殊属性
     def select_special_attr(self, attr_name: list):
         """  特殊属性支持多选：入口，出口，第三方对接 """
+
+        # 定位特殊属性选择框
         SPECIAL_ATTR = (By.XPATH, '//label[contains(text(), "特殊属性")]/following-sibling::div//input')
         BasePage(self.driver).click_ele(SPECIAL_ATTR)
 
-        # 通过指定特殊属性的名称，进行选择
-        SELECT_TIMEZONE = (By.XPATH, f'//span[text()="{attr_name}"]')
-        # 移动到特殊属性下拉列表上并进行选择
-        BasePage(self.driver).mouse_move_ele_and_click(SPECIAL_ATTR, SELECT_TIMEZONE)
+        if attr_name is not None:
+            # 通过指定特殊属性的名称，进行选择
+            SELECT_ATTR = (By.XPATH, f'//span[text()="{attr_name}"]')
+            # 移动到特殊属性下拉列表上并进行选择
+            BasePage(self.driver).mouse_move_ele_and_click(SPECIAL_ATTR, SELECT_ATTR)
+        else:
+            BasePage(self.driver).click_ele(SPECIAL_ATTR)
 
     # 定位-违停时限
     def input_park_time(self, time_minute=1):
@@ -106,9 +127,15 @@ class TaskPage(BasePage):
 
     # 定位-最小/最大车辆识别尺寸
     def com_car_size(self, text_name, width=30, height=30):
+        # 定位宽
         SIZE_WIDTH = (By.XPATH, f'//label[contains(text(), "{text_name}")]/following-sibling::div//label[text()="宽"]/following-sibling::div//input')
-        BasePage(self.driver).update_input_text(SIZE_WIDTH, width)
+        # 定位高
         SIZE_HEIGHT = (By.XPATH, f'//label[contains(text(), "{text_name}")]/following-sibling::div//label[text()="高"]/following-sibling::div//input')
+        # 先清空input框中的默认数值
+        BasePage(self.driver).clear_input_default_val(SIZE_WIDTH)
+        BasePage(self.driver).clear_input_default_val(SIZE_HEIGHT)
+        # 进行数值输入
+        BasePage(self.driver).update_input_text(SIZE_WIDTH, width)
         BasePage(self.driver).update_input_text(SIZE_HEIGHT, height)
 
     # 定位-最小车辆识别尺寸
