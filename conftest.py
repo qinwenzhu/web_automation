@@ -16,6 +16,7 @@ from guard.pages.classes.basepage import BasePage
 from guard.pages.map_page import MapPage
 from guard.pages.tool_page import ToolPage
 from guard.pages.user_page import UserPage
+from guard.pages.task_page import TaskPage
 from guard.pages.login_page import LoginPage
 from guard.pages.device_page import DevicePage
 from guard.pages.timezone_page import TimezonePage
@@ -85,7 +86,7 @@ def login(start_driver_and_quit):
 def task(login):
     before_name = {"map_group_name": f"MGN-{uuid4_data()}", "device_group_name": f"DGN-{uuid4_data()}",
                    "device_name": f"dname-{get_current_time()}", "device_id": f"id-{get_current_time()}",
-                   "task_name": f"tname-{uuid4_data()}", "time_minute": integer_num()}
+                   "task_name": f"tname-{get_current_time()}", "time_minute": integer_num()}
     MenubarPage(login).click_nav_item("配置", "地图管理")
     GroupTreePage(login).create_peer_or_next_group(group_name=before_name["map_group_name"], parent_name="Default")
     MapPage(login).upload_map(file_name=r"{}/map_data/company_4th_floor.jpg".format(SharePath.DATA_FOLDER), group_name=before_name["map_group_name"])
@@ -109,6 +110,13 @@ def task(login):
     # # 删除地图分组
     # MenubarPage(login).click_nav_item("配置", "地图管理")
     # GroupTreePage(login).delete_peer_or_next_group_by_name(parent_name=before_name["map_group_name"], module_val="map")
+
+
+@pytest.fixture(scope="module")
+def task_no_setup(login):
+    MenubarPage(login).click_nav_item("配置", "任务管理")
+    yield login
+    TaskPage(login).click_close_dialog_btn()
 
 
 """ ---------------------------- 配置-设备管理 ---------------------------- """

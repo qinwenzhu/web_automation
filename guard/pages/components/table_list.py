@@ -12,12 +12,22 @@ from guard.pages.classes.web_global_dialog import GlobalDialog
 
 class TableListPage(BasePage):
 
-    def judge_table_list_name(self, name):
-        """ 判断table列表内的名称 """
+    def judge_table_list_add_name(self, name):
+        """ 判断列表内是否存在当前名称的列表， 存在返回 True """
         TABLE_NAME = (By.XPATH, f'//table[@class="el-table__body"]//div[@class="cell" and  text() = "{name}"]')
-        if BasePage(self.driver).get_ele_locator(TABLE_NAME):
-            return True
-        else:
+        try:
+            if self.driver.find_element(*TABLE_NAME):
+                return True
+        except:
+            return False
+
+    def judge_table_list_delete_name(self, name):
+        """ 判断列表内是否存在当前名称的列表  不存在返回 True"""
+        TABLE_NAME = (By.XPATH, f'//table[@class="el-table__body"]//div[@class="cell" and  text() = "{name}"]')
+        try:
+            if not self.driver.find_element(*TABLE_NAME):
+                return True
+        except:
             return False
 
     def operations_table_list(self, name, flag):
@@ -44,6 +54,7 @@ class TableListPage(BasePage):
             pass
 
         elif flag == "delete":
+            time.sleep(2)
             BasePage(self.driver).click_ele(DELETE_ICON)
             # 进行弹框删除操作
             self.table_list_delete()

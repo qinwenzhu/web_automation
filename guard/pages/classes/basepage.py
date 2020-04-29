@@ -99,7 +99,7 @@ class BasePage:
             ele = self.driver.find_elements(*loc)
         except Exception as e:
             self.save_web_screenshots(img_describe)
-            self.log.error(f"元素定位失败！")
+            self.log.error(f"定位指定下标值的元素失败！")
             raise e
         else:
             return ele[index]
@@ -232,7 +232,7 @@ class BasePage:
             self.log.error(f"鼠标移动到元素上并点击元素失败！")
             raise e
 
-    def mouse_move_to_ele_and_offset(self, x_offset, y_offset, loc=None, ele=None, img_describe="current"):
+    def mouse_move_to_ele_and_offset(self, x_offset, y_offset, pause_time=2, loc=None, ele=None, img_describe="current"):
         """  设置鼠标移动到距元素ele，x,y轴指定坐标的距离 """
 
         actions = ActionChains(self.driver)
@@ -241,8 +241,11 @@ class BasePage:
             if loc is not None:
                 # 等待滑动到目标元素可见
                 ele = self.get_ele_locator(loc, img_describe)
-            actions.move_to_element_with_offset(ele, x_offset, y_offset).perform()
-            actions.pause(1).click().perform()
+            actions.move_to_element_with_offset(ele, x_offset, y_offset)
+            actions.perform()
+            actions.pause(pause_time)
+            actions.click()
+            actions.perform()
         except Exception as e:
             self.save_web_screenshots(img_describe)
             self.log.error("鼠标操作元素在x、y轴移动失败！")

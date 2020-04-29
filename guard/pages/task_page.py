@@ -141,28 +141,6 @@ class TaskPage(BasePage):
         BasePage(self.driver).update_input_text(SIZE_WIDTH, width)
         BasePage(self.driver).update_input_text(SIZE_HEIGHT, height)
 
-    # 定位-最小车辆识别尺寸
-    # def input_min_size(self, width=30, height=30):
-    #     # 定位-宽
-    #     MIN_SIZE_WIDTH = (By.XPATH, '//label[contains(text(), "最小车辆识别尺寸")]/following-sibling::div//input')
-    #     BasePage(self.driver).update_input_text(MIN_SIZE_WIDTH, width)
-    #
-    #     # 定位-高
-    #     MIN_SIZE_HEIGHT = (By.XPATH, '//label[contains(text(), "最小车辆识别尺寸")]/following-sibling::div//input')
-    #     BasePage(self.driver).update_input_text(MIN_SIZE_HEIGHT, height)
-
-    # 定位-最大车辆识别尺寸
-    # def input_max_size(self, width=500, height=500):
-    #     # 定位-宽
-    #     MIN_SIZE_WIDTH = (By.XPATH, '//label[contains(text(), "最大车辆识别尺寸")]/following-sibling::div//input')
-    #     BasePage(self.driver).update_input_text(MIN_SIZE_WIDTH, width)
-    #
-    #     # 定位-高
-    #     MIN_SIZE_HEIGHT = (By.XPATH, '//label[contains(text(), "最大车辆识别尺寸")]/following-sibling::div//input')
-    #     BasePage(self.driver).update_input_text(MIN_SIZE_HEIGHT, height)
-
-    # 定位-绘制违停区域
-
     # 定位-区域绘制
     def draw_park_region(self):
         # 定位点击绘制区域的按钮
@@ -204,6 +182,44 @@ class TaskPage(BasePage):
         actions.pause(1)
         actions.click()
         actions.perform()
+
+    def dialog_error_info(self, flag="task"):
+        # 通过不同的flag定位不同的错误信息元素定位表达式，并返回错误信息
+        ERROR_INFO = (By.XPATH, '//div[@class="el-form-item__error"]')
+        if flag == "task":
+            # 如果是校验设备名的错误信息，下标为0
+            ele = BasePage(self.driver).get_ele_locator_by_index(ERROR_INFO, 0)
+        elif flag == "device":
+            ele = BasePage(self.driver).get_ele_locator_by_index(ERROR_INFO, 1)
+        elif flag == "region":
+            ele = BasePage(self.driver).get_ele_locator_by_index(ERROR_INFO, 2)
+        return ele.text
+
+    def click_close_dialog_btn(self):
+        """  点击关闭dialog窗口 """
+        # 定位关闭弹窗
+        CLOSE_BUTTON = (By.XPATH, '//div[@class="el-dialog__wrapper"]//span[contains(text(), "添加任务")]/following-sibling::button')
+        BasePage(self.driver).click_ele(CLOSE_BUTTON)
+
+    """------------------ 非空校验 ---------------------------"""
+    def verify_parked_vehicle_not_null(self, is_confirm=True):
+        """ 点击添加任务，点击确认，进行车辆违停的非空校验"""
+        # 点击左侧菜单
+        self.click_left_menu("车辆-违停检测任务")
+        click_btn(self.driver).click_btn(btn_name="添加任务")
+        self.com_confirm_or_cancel(is_confirm=is_confirm)
+
+    # def verify_parked_vehicle_not_null_device_name(self, device_name, menu_name="车辆-违停检测任务", is_confirm=True):
+    #     点击左侧菜单
+    #     self.click_left_menu(menu_name)
+    #     # 点击添加任务
+    #     click_btn(self.driver).click_btn(btn_name="添加任务")
+    #     # 基础配置
+    #     # self.select_task_type(menu_name)
+    #     self.input_task_name(task_name)
+    #
+    #     self.select_device()
+    #     self.com_confirm_or_cancel(is_confirm=is_confirm)
 
 
 if __name__ == '__main__':

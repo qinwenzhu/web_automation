@@ -127,7 +127,7 @@ class DevicePage(BasePage):
             BasePage(self.driver).click_ele(CANCLE_BTN)
 
     # 定位-地点
-    def select_device_site(self, map_group_name="Default", pause_time=0.2, is_confirm=True):
+    def select_device_site(self, map_group_name="Default", is_confirm=True):
         """ 标准设备在地图中的点位 """
 
         SITE = (By.XPATH, '//label[contains(text(), "地点")]/following-sibling::div//span')
@@ -142,7 +142,6 @@ class DevicePage(BasePage):
 
         # 定位 - 地图点位图标
         MAP_POINT = (By.XPATH, '//a[contains(@title, "Draw a marker")]')
-        move_ele = BasePage(self.driver).get_ele_locator(MAP_POINT)
         BasePage(self.driver).click_ele(MAP_POINT)
 
         # 定位 - 地图容器
