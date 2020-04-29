@@ -28,3 +28,11 @@ class GlobalDialog(BasePage):
             # 点击取消按钮
             CONFIRM_BTN = (By.XPATH, '//button//span[contains(text(), "取消")]')
             BasePage(self.driver).click_ele(CONFIRM_BTN)
+
+    """ 通用：系统页面提示dialog """
+    def dialog_warning(self, is_confirm=True):
+
+        if is_confirm:
+            WARN_BTN = (By.XPATH, '//span[contains(text(), "提示")]/ancestor::div[@class="el-dialog__header"]/following-sibling::div[@class="el-dialog__footer"]//button//span[contains(text(), "确定")] ')
+        else:
+            CANCLE_BTN = (By.XPATH, '//span[contains(text(), "提示")]/ancestor::div[@class="el-dialog__header"]/following-sibling::div[@class="el-dialog__footer"]//button//span[contains(text(), "取消")] ')

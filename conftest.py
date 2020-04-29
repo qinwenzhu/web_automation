@@ -103,6 +103,9 @@ def task(login):
     time.sleep(2)
     MenubarPage(login).click_nav_item("配置", "任务管理")
     yield login, before_name
+    # 进入实况，搜索设备，查看推送
+    # MenubarPage(login).click_nav_item("实况")
+
     # 删除任务
     # 删除设备分组
     # MenubarPage(login).click_nav_item("配置", "设备管理")

@@ -36,19 +36,9 @@ def test_add_parking_detection_task_and_not_null(task_no_setup):
     assert "请绘制违停区域" in result[2]
 
 
-# @pytest.mark.parametrize("data", TaskData.pvs_data_task_name_not_null)
-# def test_add_parking_detection_task_and_not_null(task, data):
-#     # 测试添加车辆违停任务 - 任务名
-#     TaskPage(task[0]).verify_parked_vehicle_not_null_task_name(task_name=data["task_name"])
-#
-#     result = TaskPage(task[0]).dialog_error_info(flag=data["flag"])
-#     assert data["erro_info"] in result
-
-
 # @pytest.mark.skip("跳过")
 def test_delete_vehicle_illegally_parking_detection_task(task):
     # 测试删除-车辆违停任务
     TableListPage(task[0]).operations_table_list(name=task[1]["task_name"], flag="delete")
 
     assert TableListPage(task[1]).judge_table_list_delete_name(task[1]["task_name"])
-
